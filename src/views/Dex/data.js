@@ -41,7 +41,11 @@ import MoonbeamIcon from '../../assets/network_logo/moonbeam.png'
 import CosmosIcon from '../../assets/network_logo/cosmos.svg'
 import OsmosisIcon from '../../assets/network_logo/osmosis.svg'
 import JunoIcon from '../../assets/network_logo/juno.svg'
-
+import AkashIcon from '../../assets/network_logo/akash.svg'
+import StargazeIcon from '../../assets/network_logo/stargaze.png'
+import ChihuahuaIcon from '../../assets/network_logo/chihuahua.png'
+import BandchainIcon from '../../assets/network_logo/bandchain.svg'
+import BtcIcon from '../../assets/network_logo/btc.svg'
 export const modalType = {
   from: "from",
   to: "to",
@@ -210,6 +214,41 @@ export const swapNetworks = [
   //   chainId: 'juno-1',
   //   id: 'juno',
   //   logo: JunoIcon,
+  // },
+  // {
+  //   blockchain: "AKASH",
+  //   name: "Akash",
+  //   chainId: "akashnet-2",
+  //   id: "akash",
+  //   logo: AkashIcon,
+  // },
+  // {
+  //   blockchain: "STARGAZE",
+  //   name: "Stargaze",
+  //   chainId: "stargaze-1",
+  //   id: "stargaze",
+  //   logo: StargazeIcon,
+  // },
+  // {
+  //   blockchain: "CHIHUAHUA",
+  //   name: "Chihuahua",
+  //   chainId: "chihuahua-1",
+  //   id: "chihuahua",
+  //   logo: ChihuahuaIcon,
+  // },
+  // {
+  //   blockchain: "BANDCHAIN",
+  //   name: "BandChain",
+  //   chainId: "injective-1",
+  //   id: "bandchain",
+  //   logo: BandchainIcon,
+  // },
+  // {
+  //   blockchain: "BTC",
+  //   name: "BTC",
+  //   chainId: "transfer",
+  //   id: "btc",
+  //   logo: BtcIcon,
   // }
   
   
