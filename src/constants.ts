@@ -1,7 +1,4 @@
 import { networks, enabledNetworkIds } from "src/networks";
-
-export const THE_GRAPH_URL = "https://api.thegraph.com/subgraphs/name/colonelssecretspices/kfc-graph";
-
 export const TOKEN_DECIMALS = 9;
 
 export const MISSING_ADDRESS = '0x0000000000000000000000000000000000000000';

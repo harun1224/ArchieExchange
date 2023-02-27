@@ -418,5 +418,5 @@ export const networks: INetworks = {
 };
 
 export const enabledNetworkIds: NetworkId[] = Object.keys(networks).map(networkId => parseInt(networkId)).filter(networkId => networks[networkId].isEnabled);
-export const enabledNetworkIdsExceptDexOnly: NetworkId[] = Object.keys(networks).map(networkId => parseInt(networkId)).filter(networkId => networks[networkId].isEnabled && networkId !== NetworkIds.Bsc && networkId !== NetworkIds.Ethereum && networkId !== NetworkIds.Avalanche && networkId !== NetworkIds.Polygon && networkId !== NetworkIds.Harmony && networkId !== NetworkIds.Arbitrum);
-export const enabledMainNetworkIds: NetworkId[] = enabledNetworkIds.filter(networkId => !networks[networkId].isTestNet);
+// export const enabledNetworkIdsExceptDexOnly: NetworkId[] = Object.keys(networks).map(networkId => parseInt(networkId)).filter(networkId => networks[networkId].isEnabled && networkId !== NetworkIds.Bsc && networkId !== NetworkIds.Ethereum && networkId !== NetworkIds.Avalanche && networkId !== NetworkIds.Polygon && networkId !== NetworkIds.Harmony && networkId !== NetworkIds.Arbitrum);
+// export const enabledMainNetworkIds: NetworkId[] = enabledNetworkIds.filter(networkId => !networks[networkId].isTestNet);

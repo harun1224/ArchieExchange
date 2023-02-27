@@ -42,43 +42,6 @@ function BestRoute(props) {
          justifyContent="center" className="dash-border bestRoute border-2 border-gray-400 border-dashed rounded-lg mt-5">
       { props?.routeLoading ? <ReactLoading type="spinningBubbles" color={darkmodeStatus? "#FFFFFF" : "#000000"} /> : (
         <>
-          {/* <Box position="absolute" top="10px" right="10px" onMouseEnter={e => openSetting(e)}
-               onMouseLeave={e => openSetting(e)}>
-            <SvgIcon color="primary" component={ SettingsIcon } />
-            <Popper open={ settingPopperOpen } anchorEl={ anchorEl } placement="bottom-end" transition>
-              { ({ TransitionProps }) => {
-                return (
-                  <Fade { ...TransitionProps } timeout={ 100 }>
-                    <Box bgcolor="#3a3d52" borderRadius="5px" py="15px" px="20px" display="flex"
-                         flexDirection={ {xs: "column", lg: "row" } } justifyContent="space-between">
-                      <Box display="flex" flexDirection="column" mr="20px">
-                        <Box mb={{xs: "10px", lg: 0}}>
-                          <Typography style={ { fontSize: "18px" } } className="font-weight-bolder">Swap
-                            Settings</Typography>
-                          <Typography style={ { fontSize: "10px" } }>Slippage tolerance per Swap</Typography>
-                        </Box>
-                      </Box>
-                      <Box display="flex" alignItems="center">
-                        {
-                          slippageList.map((item, index) => {
-                            return (
-                              <Box className="cursor-pointer font-weight-bolder" key={ `swap_${ index }` }
-                                   color={ item === props?.slippage ? "#000" : "#FCFCFC" }
-                                   bgcolor={ item === props?.slippage ? "#f6c777" : "#2b2d3e" } borderRadius="3px" p="10px"
-                                   mr={ index<slippageList.length - 1 ? "5px" : "" }
-                                   onClick={ () => props?.setSlippage(item) }>
-                                { item }%
-                              </Box>
-                            );
-                          })
-                        }
-                      </Box>
-                    </Box>
-                  </Fade>
-                );
-              } }
-            </Popper>
-          </Box> */}
           <div className={`absolute top-0 left-0 ppx-2 py-1 cursor-pointer border-dotted
               bg-gray-swap flex flex-row items-center`}>
               <div className="pr-[7px] flex flex-row items-center">

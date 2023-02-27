@@ -46,6 +46,9 @@ import StargazeIcon from '../../assets/network_logo/stargaze.png'
 import ChihuahuaIcon from '../../assets/network_logo/chihuahua.png'
 import BandchainIcon from '../../assets/network_logo/bandchain.svg'
 import BtcIcon from '../../assets/network_logo/btc.svg'
+import IrisnetIcon from '../../assets/network_logo/iris.png'
+import StarnameIcon from '../../assets/network_logo/starname.png'
+
 export const modalType = {
   from: "from",
   to: "to",
@@ -61,39 +64,11 @@ export const bondActionType = {
 
 export const swapNetworks = [
   {
-    blockchain: 'ETH',
-    name: 'ETH',
-    chainId: 1,
-    id: 'ethereum',
-    logo: EthereumIcon,
-  },
-  {
-    blockchain: 'BSC',
-    name: 'BSC',
-    chainId: 56,
-    id: 'binance-smart-chain',
-    logo: BscIcon,
-  },
-  {
-    blockchain: 'FANTOM',
-    name: 'FANTOM',
-    chainId: 250,
-    id: 'fantom',
-    logo: FantomIcon,
-  },
-  {
-    blockchain: 'AVAX_CCHAIN',
-    name: 'AVALANCHE',
-    chainId: 43114,
-    id: 'avax_cchain',
-    logo: AvalancheIcon,
-  },
-  {
-    blockchain: 'POLYGON',
-    name: 'POLYGON',
-    chainId: 137,
-    id: 'polygon',
-    logo: PolygonIcon,
+    blockchain: "AKASH",
+    name: "Akash",
+    chainId: "akashnet-2",
+    id: "akash",
+    logo: AkashIcon,
   },
   {
     blockchain: 'ARBITRUM',
@@ -103,19 +78,88 @@ export const swapNetworks = [
     logo: ArbitrumIcon,
   },
   {
-    blockchain: 'OPTIMISM',
-    name: 'OPTIMISM',
-    chainId: 10,
-    id: 'optimism',
-    logo: OptimismIcon,
+    blockchain: 'AURORA',
+    name: 'AURORA',
+    chainId: 1313161554,
+    id: 'aurora',
+    logo: AuroraIcon,
   },
-  
   {
-    blockchain: 'HARMONY',
-    name: 'HARMONY',
-    chainId: 1666600000,
-    id: 'harmony',
-    logo: HarmonyIcon
+    blockchain: 'AVAX_CCHAIN',
+    name: 'AVALANCHE',
+    chainId: 43114,
+    id: 'avax_cchain',
+    logo: AvalancheIcon,
+  },
+  {
+    blockchain: "BANDCHAIN",
+    name: "BandChain",
+    chainId: "injective-1",
+    id: "bandchain",
+    logo: BandchainIcon,
+  },
+  {
+    blockchain: 'BOBA',
+    name: 'BOBA',
+    chainId: 288,
+    id: 'boba',
+    logo: BobaIcon,
+  },
+  {
+    blockchain: 'BNB',
+    name: 'Binance Chain',
+    chainId: 'binance-chain-tigris',
+    id: 'binance chain',
+    logo: BscIcon,
+  },
+  {
+    blockchain: 'BSC',
+    name: 'BSC',
+    chainId: 56,
+    id: 'binance-smart-chain',
+    logo: BscIcon,
+  },
+  {
+    blockchain: "CHIHUAHUA",
+    name: "Chihuahua",
+    chainId: "chihuahua-1",
+    id: "chihuahua",
+    logo: ChihuahuaIcon,
+  },
+  {
+    blockchain: 'COSMOS',
+    name: 'COSMOS',
+    chainId: 'cosmoshub-4',
+    id: 'cosmos',
+    logo: CosmosIcon,
+  },
+  {
+    blockchain: 'CRONOS',
+    name: 'CRONOS',
+    chainId: 25,
+    id: 'cronos',
+    logo: CronosIcon,
+  },
+  {
+    blockchain: 'ETH',
+    name: 'ETH',
+    chainId: 1,
+    id: 'ethereum',
+    logo: EthereumIcon,
+  },
+  {
+    blockchain: 'EVMOS',
+    name: 'EVMOS',
+    chainId: 9001,
+    id: 'evmos',
+    logo: EvmosIcon,
+  },  
+  {
+    blockchain: 'FANTOM',
+    name: 'FANTOM',
+    chainId: 250,
+    id: 'fantom',
+    logo: FantomIcon,
   },
   {
     blockchain: 'FUSE',
@@ -132,32 +176,11 @@ export const swapNetworks = [
     logo: GnosisIcon,
   },
   {
-    blockchain: 'BOBA',
-    name: 'BOBA',
-    chainId: 288,
-    id: 'boba',
-    logo: BobaIcon,
-  },
-  {
-    blockchain: 'CRONOS',
-    name: 'CRONOS',
-    chainId: 25,
-    id: 'cronos',
-    logo: CronosIcon,
-  },
-  {
-    blockchain: 'MOONRIVER',
-    name: 'MOONRIVER',
-    chainId: 1285,
-    id: 'moonriver',
-    logo: MoonriverIcon,
-  },  
-  {
-    blockchain: 'AURORA',
-    name: 'AURORA',
-    chainId: 1313161554,
-    id: 'aurora',
-    logo: AuroraIcon,
+    blockchain: 'HARMONY',
+    name: 'HARMONY',
+    chainId: 1666600000,
+    id: 'harmony',
+    logo: HarmonyIcon
   },
   {
     blockchain: 'HECO',
@@ -167,18 +190,19 @@ export const swapNetworks = [
     logo: HecoIcon,
   },
   {
-    blockchain: 'OKC',
-    name: 'OKC',
-    chainId: 66,
-    id: 'okc',
-    logo: OkcIcon,
+    blockchain: "IRIS",
+    name: "IRISnet",
+    chainId: "irishub-1",
+    id: "irisnet",
+    logo: IrisnetIcon,
+
   },
   {
-    blockchain: 'EVMOS',
-    name: 'EVMOS',
-    chainId: 9001,
-    id: 'evmos',
-    logo: EvmosIcon,
+    blockchain: 'JUNO',
+    name: 'JUNO',
+    chainId: 'juno-1',
+    id: 'juno',
+    logo: JunoIcon,
   },
   {
     blockchain: 'MOONBEAM',
@@ -187,71 +211,62 @@ export const swapNetworks = [
     id: 'moonbeam',
     logo: MoonbeamIcon,
   },
-  // {
-  //   blockchain: 'COSMOS',
-  //   name: 'COSMOS',
-  //   chainId: 'cosmoshub-4',
-  //   id: 'cosmos',
-  //   logo: CosmosIcon,
-  // },
-  // {
-  //   blockchain: 'OSMOSIS',
-  //   name: 'OSMOSIS',
-  //   chainId: 'osmosis-1',
-  //   id: 'osmosis',
-  //   logo: OsmosisIcon,
-  // },
-  // {
-  //   blockchain: 'BNB',
-  //   name: 'Binance Chain',
-  //   chainId: 'binance-chain-tigris',
-  //   id: 'binance chain',
-  //   logo: BscIcon,
-  // },
-  // {
-  //   blockchain: 'JUNO',
-  //   name: 'JUNO',
-  //   chainId: 'juno-1',
-  //   id: 'juno',
-  //   logo: JunoIcon,
-  // },
-  // {
-  //   blockchain: "AKASH",
-  //   name: "Akash",
-  //   chainId: "akashnet-2",
-  //   id: "akash",
-  //   logo: AkashIcon,
-  // },
-  // {
-  //   blockchain: "STARGAZE",
-  //   name: "Stargaze",
-  //   chainId: "stargaze-1",
-  //   id: "stargaze",
-  //   logo: StargazeIcon,
-  // },
-  // {
-  //   blockchain: "CHIHUAHUA",
-  //   name: "Chihuahua",
-  //   chainId: "chihuahua-1",
-  //   id: "chihuahua",
-  //   logo: ChihuahuaIcon,
-  // },
-  // {
-  //   blockchain: "BANDCHAIN",
-  //   name: "BandChain",
-  //   chainId: "injective-1",
-  //   id: "bandchain",
-  //   logo: BandchainIcon,
-  // },
+  {
+    blockchain: 'MOONRIVER',
+    name: 'MOONRIVER',
+    chainId: 1285,
+    id: 'moonriver',
+    logo: MoonriverIcon,
+  },   
+  {
+    blockchain: 'OKC',
+    name: 'OKC',
+    chainId: 66,
+    id: 'okc',
+    logo: OkcIcon,
+  },
+  {
+    blockchain: 'OPTIMISM',
+    name: 'OPTIMISM',
+    chainId: 10,
+    id: 'optimism',
+    logo: OptimismIcon,
+  },
+  {
+    blockchain: 'OSMOSIS',
+    name: 'OSMOSIS',
+    chainId: 'osmosis-1',
+    id: 'osmosis',
+    logo: OsmosisIcon,
+  },
+  {
+    blockchain: 'POLYGON',
+    name: 'POLYGON',
+    chainId: 137,
+    id: 'polygon',
+    logo: PolygonIcon,
+  },
+  {
+    blockchain: "STARGAZE",
+    name: "Stargaze",
+    chainId: "stargaze-1",
+    id: "stargaze",
+    logo: StargazeIcon,
+  },
+  {
+    blockchain: "STARNAME",
+    name: "Starname",
+    chainId: "iov-mainnet-ibc",
+    id: "starname",
+    logo: StarnameIcon, 
+  }  
   // {
   //   blockchain: "BTC",
   //   name: "BTC",
   //   chainId: "transfer",
   //   id: "btc",
   //   logo: BtcIcon,
-  // }
-  
-  
+  // } 
 ];
 
 export const slippageList = [
