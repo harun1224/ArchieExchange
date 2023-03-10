@@ -275,6 +275,7 @@ function Dex() {
     setToTokenAmount("");
     let connectedWallets = [];
     const selectedWallets = {};
+    console.log("addressss", address);
     if (address) {
       connectedWallets = swapNetworks.map(network => {
         return {
@@ -661,21 +662,21 @@ function Dex() {
           :<></>}
           <Box mt="20px" display="flex" justifyContent="center" alignItems="center">
                         {
-                          !address && <Button
-                            variant="contained"
-                            color="primary"
-                            bgcolor="#2F8AF5"
-                            className={`bg-[#2F8AF5]/[.16]' w-full text-[#2F8AF5] hover:bg-[#7b8dc9]`}
-                            onClick={()=> connect() }
-                          >
-                            {/* !address && <Button
+                          // !address && <Button
+                          //   variant="contained"
+                          //   color="primary"
+                          //   bgcolor="#2F8AF5"
+                          //   className={`bg-[#2F8AF5]/[.16]' w-full text-[#2F8AF5] hover:bg-[#7b8dc9]`}
+                          //   onClick={()=> connect() }
+                          // >
+                            !address && <Button
                             variant="contained"
                             color="primary"
                             bgcolor="#2F8AF5"
                             // style={{backgroundColor: 'rgba(47, 138, 245, 0.16)'}}
                             className={`bg-[#2F8AF5]/[.16]' w-full text-[#2F8AF5] hover:bg-[#7b8dc9]`}
                             onClick={()=> SetwalletOpen(true) }
-                          > */}
+                          >
                             {/* <div className="self-center mr-3">
                               <img src={ConnectWalletBtn}/>
                             </div> */}

@@ -15,93 +15,103 @@ import tokenpocket from './WalletImages/Tokenpocket.png';
 import trustwallet from './WalletImages/TrustWallet.png';
 import walletconnect from './WalletImages/WalletConnect.svg';
 import xdefi from './WalletImages/XDefi.jfif';
-
+import frontier from './WalletImages/Frontier.png';
 export const wallets = [
     {
         logo:metamask,
         name:"Metamask",
-        status:"install"
+        status:"install",
+        id: 1
     },
     {
         logo:walletconnect,
         name:"WallectConect",
-        status:"install"
+        status:"disconnect",
+        id: 2
     },
-    {
-        logo:kepir,
-        name:"Kepir",
-        status:"install"
-    },
+    // {
+    //     logo:kepir,
+    //     name:"Kepir",
+    //     status:"install",
+    //     id: 3
+    // },
     {
         logo:binance,
         name:"Binance",
-        status:"Not supported yet"
-    },
-    {
-        logo:brave,
-        name:"Brave",
-        status:"Not supported yet"
-    },
-    {
-        logo:clover,
-        name:"Clover",
-        status:"Not supported yet"
-    },
-    {
-        logo:coin98,
-        name:"Coin98",
-        status:"Not supported yet"
-    },
-    {
-        logo:coinbase,
-        name:"Coinbase",
-        status:"Not supported yet"
-    },
-    {
-        logo:cosmostation,
-        name:"Cosmostation",
-        status:"Not supported yet"
-    },
-    {
-        logo:exdous,
-        name:"Exdous",
-        status:"Not supported yet"
-    },
-    
-    {
-        logo: mathwallet,
-        name:"Math Wallet",
-        status:"Not supported yet"
-    },
-    {
-        logo:okx,
-        name:"Okx",
-        status:"Not supported yet"
-    },
-    {
-        logo:phantom,
-        name:"Phantom",
-        status:"Not supported yet"
-    },
-    {
-        logo: safepal,
-        name:"Safepal",
-        status:"Not supported yet"
-    },
-    {
-        logo:tokenpocket,
-        name:"Tokenpocket",
-        status:"Not supported yet"
+        status:"install",
+        id: 4
     },
     {
         logo:trustwallet,
         name:"TrustWallet",
-        status:"Not supported yet"
+        status:"install",
+        id: 5,
     },
     
     {
-        logo: xdefi,
-        name:"XDefi",
-        status:"Not supported yet"
+        logo:coin98,
+        name:"Coin98",
+        status:"install",
+        id: 6,
     },
+    {
+        logo:coinbase,
+        name:"Coinbase",
+        status:"install",
+        id: 7
+    },
+    // {
+    //     logo: frontier,
+    //     name: "Frontier",
+    //     status: "install",
+    //     id: 8
+    // },
+    // {
+    //     logo:clover,
+    //     name:"Clover",
+    //     status:"install",
+    //     id: 9
+    // },   
+    // {
+    //     logo:cosmostation,
+    //     name:"Cosmostation",
+    //     status:"install",
+    //     id: 10
+    // },
+    // {
+    //     logo:exdous,
+    //     name:"Exdous",
+    //     status:"install",
+    //     id: 11
+    // },
+    // {
+    //     logo:okx,
+    //     name:"Okx",
+    //     status:"Not supported yet",
+    //     id: 12
+    // },
+    // {
+    //     logo:phantom,
+    //     name:"Phantom",
+    //     status:"Not supported yet",
+    //     id: 13
+    // },
+    // {
+    //     logo: safepal,
+    //     name:"Safepal",
+    //     status:"Not supported yet",
+    //     id: 14
+    // },
+    // {
+    //     logo:tokenpocket,
+    //     name:"Tokenpocket",
+    //     status:"Not supported yet",
+    //     id: 15
+    // },   
+    // {
+    //     logo: xdefi,
+    //     name:"XDefi",
+    //     status:"Not supported yet",
+    //     id: 16
+    // },
 ]

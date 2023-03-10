@@ -7,8 +7,12 @@ import { NetworkId, NetworkIds, networks, enabledNetworkIds } from "src/networks
 import store from "src/store";
 import { error } from "src/slices/MessagesSlice";
 import { chains } from "src/providers";
-import { isDexLoading, isDexPage } from "../helpers/Dex";
+import { isDexLoading, isDexPage, requireAssetMessage } from "../helpers/Dex";
+import detectEthereumProvider from '@metamask/detect-provider'
+import { ethers } from 'ethers'
 
+
+declare const window: any;
 
 /**
  * determine if in IFrame for Ledger Live
@@ -25,7 +29,7 @@ function getURI(networkId: NetworkId): string {
   Types
 */
 type onChainProvider = {
-  connect: () => void;
+  connect: (status: String) => void;
   disconnect: () => void;
   provider: JsonRpcProvider | null;
   address: string;
@@ -223,41 +227,130 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({child
   };
 
   // connect - only runs for WalletProviders
-  const connect = useCallback(async () => {
+  const connect = useCallback(async (status) => {
     // handling Ledger Live;
-    let rawProvider;
-    if (isIframe()) {
-      rawProvider = new IFrameEthereumProvider();
-    } else {
-      rawProvider = await web3Modal.connect();
-    }
-
-    // new _initListeners implementation matches Web3Modal Docs
-    // ... see here: https://github.com/Web3Modal/web3modal/blob/2ff929d0e99df5edf6bb9e88cff338ba6d8a3991/example/src/App.tsx#L185
-    _initListeners(rawProvider);
-    const connectedProvider = new Web3Provider(rawProvider, "any");
-    const chainId = await connectedProvider.getNetwork().then(network => network.chainId);
-    const connectedAddress = await connectedProvider.getSigner().getAddress();
-    setAddress(connectedAddress);
-    const validNetwork = _checkNetwork(chainId);
-    if (!validNetwork) {
-      const switched = await switchEthereumChain(defaultNetworkId, true);
-      if (!switched) {
-        web3Modal.clearCachedProvider();
-        const errorMessage = "Unable to connect. Please change network using provider.";
-        console.error(errorMessage);
-        store.dispatch(error(errorMessage));
+    let rawProvider:any;
+    let connectedProvider;
+    let chainId;
+    let connectedAddress;
+    if (status == "Metamask") {      
+      if (isIframe()) {
+        rawProvider = new IFrameEthereumProvider();
+      } else {
+        // rawProvider = await web3Modal.connect();
+        rawProvider = await detectEthereumProvider({ mustBeMetaMask: true });
+        if(rawProvider) {
+          //@ts-ignore
+          await rawProvider.request({ method: "eth_requestAccounts" });
+        }
+        connectedProvider = new Web3Provider(rawProvider as any);
+        chainId = await connectedProvider.getNetwork().then(network => network.chainId);
+        connectedAddress = await connectedProvider.getSigner().getAddress();
+        setAddress(connectedAddress);
+        // const validNetwork = _checkNetwork(chainId);
+        // if (!validNetwork) {
+        //   const switched = await switchEthereumChain(defaultNetworkId, true);
+        //   if (!switched) {
+        //     web3Modal.clearCachedProvider();
+        //     const errorMessage = "Unable to connect. Please change network using provider.";
+        //     console.error(errorMessage);
+        //     store.dispatch(error(errorMessage));
+        //   }
+        //   return;
+        // }
+        // Save everything after we've validated the right network.
+        // Eventually we'll be fine without doing network validations.
+        setProvider(connectedProvider);        
       }
-      return;
     }
-    // Save everything after we've validated the right network.
-    // Eventually we'll be fine without doing network validations.
-    setProvider(connectedProvider);
 
+    if (status == "WallectConect") {
+      rawProvider = new WalletConnectProvider({
+        infuraId: "27e484dcd9e3efcfd25a83a78777cdf1", // Required
+      });
+      await rawProvider.enable();
+      connectedProvider = new Web3Provider(rawProvider as any);;
+      chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
+      connectedAddress = await connectedProvider.getSigner().getAddress();
+      console.log("adress", connectedAddress)
+      setAddress(connectedAddress);
+      // if (isIframe()) {
+      //   rawProvider = new IFrameEthereumProvider();
+      // } else {
+        
+      //   rawProvider = await web3Modal.connect();
+      //   console.log("wall")
+      // }
+  
+      // // new _initListeners implementation matches Web3Modal Docs
+      // // ... see here: https://github.com/Web3Modal/web3modal/blob/2ff929d0e99df5edf6bb9e88cff338ba6d8a3991/example/src/App.tsx#L185
+      // _initListeners(rawProvider);
+      // const connectedProvider = new Web3Provider(rawProvider, "any");
+      // const chainId = await connectedProvider.getNetwork().then(network => network.chainId);
+      // const connectedAddress = await connectedProvider.getSigner().getAddress();
+      // setAddress(connectedAddress);
+      // const validNetwork = _checkNetwork(chainId);
+      // if (!validNetwork) {
+      //   const switched = await switchEthereumChain(defaultNetworkId, true);
+      //   if (!switched) {
+      //     web3Modal.clearCachedProvider();
+      //     const errorMessage = "Unable to connect. Please change network using provider.";
+      //     console.error(errorMessage);
+      //     store.dispatch(error(errorMessage));
+      //   }
+      //   return;
+      // }
+    }
+
+    if (status == "Binance") {
+      rawProvider = new ethers.providers.Web3Provider(window.BinanceChain)
+      await rawProvider.send('eth_requestAccounts', [])
+      connectedProvider = rawProvider;
+      chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
+      console.log("chainide", chainId);
+      connectedAddress = await connectedProvider.getSigner().getAddress();
+      console.log("adress", connectedAddress)
+      setAddress(connectedAddress);
+    }
+
+    if (status == "TrustWallet") {
+      rawProvider = new ethers.providers.Web3Provider(window.ethereum)
+      await rawProvider.send('eth_requestAccounts', [])
+      connectedProvider = rawProvider;
+      chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
+      connectedAddress = await connectedProvider.getSigner().getAddress();
+      console.log("adress", connectedAddress)
+      setAddress(connectedAddress);
+    }   
+
+    if (status == "Coinbase") {
+      rawProvider = new ethers.providers.Web3Provider(window.ethereum)
+      await rawProvider.send('eth_requestAccounts', [])
+      connectedProvider = rawProvider;
+      chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
+      console.log("chainide", chainId);
+      connectedAddress = await connectedProvider.getSigner().getAddress();
+      console.log("adress", connectedAddress)
+      setAddress(connectedAddress);
+
+    } 
+
+    if (status == "Coin98") {
+      rawProvider = new ethers.providers.Web3Provider(window.coin98.provider)
+      await rawProvider.send('eth_requestAccounts', [])
+      connectedProvider = rawProvider;
+      chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
+      connectedAddress = await connectedProvider.getSigner().getAddress();
+      setAddress(connectedAddress);
+    }
+    
+    if (status == "Exdous") {
+      rawProvider = new ethers.providers.Web3Provider(window.ethereum)
+      await rawProvider.send('eth_requestAccounts', [])
+    }      
     // Keep this at the bottom of the method, to ensure any repaints have the data we need
     setConnected(true);
-
-    return connectedProvider;
+    return connectedProvider;    
   }, [provider, web3Modal, connected]);
 
   const disconnect = useCallback(async () => {

@@ -78,15 +78,6 @@ export const chains: AllChainDetails = {
     blockExplorerUrls: ['https://ftmscan.com/'],
     multicallAddress: '0xe4CC2532B2b1EC585310682af3656b2E4B6fab58',
   }),
-  [NetworkIds.FantomTestnet]: new ChainDetails({
-    networkName: 'Fantom testnet',
-    rpcUrls: [
-      'https://rpc.testnet.fantom.network/',
-    ],
-    decimals: 18,
-    symbol: 'FTM',
-    blockExplorerUrls: [],
-  }),
   [NetworkIds.Moonriver]: new ChainDetails({
     networkName: 'Moonriver',
     rpcUrls: [
@@ -116,16 +107,6 @@ export const chains: AllChainDetails = {
     decimals: 18,
     blockExplorerUrls: ['https://etherscan.io/'],
     multicallAddress: '0x5ba1e12693dc8f9c48aad8770482f4739beed696',
-  }),
-  [NetworkIds.Rinkeby]: new ChainDetails({
-    networkName: 'Rinkeby',
-    rpcUrls: [
-      // 'https://rinkeby.infura.io/v3/84842078b09946638c03157f83405213',
-      'https://eth-rinkeby.alchemyapi.io/v2/EWSLdTPfKsidqzm4f_kvJPaX5HI8A-D8',
-    ],
-    symbol: 'ETH',
-    decimals: 18,
-    blockExplorerUrls: ['https://rinkeby.etherscan.io/'],
   }),
   [NetworkIds.Avalanche]: new ChainDetails({
     networkName: 'Avalanche Network',

@@ -1,19 +1,86 @@
 import { Modal, Box, Typography, Fade } from "@material-ui/core";
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import CloseIcon from "@material-ui/icons/Close";
 import { wallets } from "./walletsinfo";
 import "./dex.scss";
-import detectEthereumProvider from '@metamask/detect-provider';
+// import detectEthereumProvider from '@metamask/detect-provider';
+import { useWeb3Context } from "../../hooks";
 
-
-
-const walletConnection = () => {
-  
-} 
 
 function WalletModal(props) {
 
-  
+  const { connect } = useWeb3Context();
+  const walletInfo = wallets;
+  const checkWalletInstall = () => {
+    if (typeof window.ethereum !== 'undefined') {
+      window.ethereum.providers.forEach(async (p) => {
+        if (p.isMetaMask) {
+          walletInfo[0].status = "disconnect";
+        }
+        if (p.isTrustWallet) {
+          walletInfo[3].status = 'disconnect';
+        }
+        if (p.isCoin98) {
+          walletInfo[4].status = 'disconnect'
+        }
+        if (p.isCoinbaseWallet) {
+          walletInfo[5].status = 'disconnect';
+        }
+
+      });
+      // if (window.ethereum.isMetaMask) {
+      //   walletInfo[0].status = "disconnect";
+      // }
+
+      // if (window.ethereum.isTrustWallet) {
+      //   walletInfo[3].status = 'disconnect';
+      // }
+
+      // if (window.ethereum?.isCoin98) {
+      //   walletInfo[4].status = 'disconnect';
+      // }
+      // if (window.ethereum.isCoinbaseWallet) {
+      //   walletInfo[5].status = 'disconnect';
+      // }
+      // if (window.ethereum.isExodus) {
+      //   walletInfo[10].status = 'disconnect';
+      // }
+      
+    }
+    // if (typeof window.keplr !== 'undefined') {
+    //   walletInfo[2].status = "disconnect";
+    // }
+    if ( typeof window.BinanceChain !== 'undefined') {
+      walletInfo[2].status = 'disconnect';
+    }
+    // if (typeof window.frontier !== 'undefined') {
+    //   walletInfo[7].status = "disconnect";
+    // }
+
+    // if (typeof window.clover !== 'undefined') {
+    //   walletInfo[8].status = 'disconnect';
+    // }
+    // if (typeof window.cosmostation !== 'undefined') {
+    //   walletInfo[9].status = 'disconnect';
+    // }
+     
+  }
+
+  const walletConnection = (walletName, walletStatus) => {
+    // console.log("walletConnecion", walletName);
+    if (walletStatus == "disconnect") {
+      connect(walletName);
+    } else {
+      alert(`You do not have ${walletName}`);
+    }
+    
+  }
+
+  useEffect(() => {
+    console.log("ethereum",  window.ethereum.providers);
+    checkWalletInstall();
+    
+  }, []);
 
   return (
     <Modal open={props.open} onClose={() => props.onClose()}>
@@ -43,9 +110,9 @@ function WalletModal(props) {
                              <span className="text-sm sm:text-base">{network.name}</span>
                         </li>
                         })} */}
-                        {wallets.map((wallet) =>{
+                        {walletInfo.map((wallet) =>{
                           return(                           
-                              <li className=" cursor-pointer relative mx-auto flex w-auto flex-col py-2 px-1" onClick={() => walletConnection()}>
+                              <li className=" cursor-pointer relative mx-auto flex w-auto flex-col py-2 px-1" onClick={() => walletConnection(wallet.name, wallet.status)}>
                                 <img src={wallet.logo} className="mx-auto mb-2 h-10 rounded-full md:h-15"/>
                                 <Typography className="text-center font-bold">{wallet.name}</Typography>
                                 <p className="text-[#ffffffb3] text-center">{wallet.status}</p>

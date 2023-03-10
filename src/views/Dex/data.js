@@ -48,7 +48,22 @@ import BandchainIcon from '../../assets/network_logo/bandchain.svg'
 import BtcIcon from '../../assets/network_logo/btc.svg'
 import IrisnetIcon from '../../assets/network_logo/iris.png'
 import StarnameIcon from '../../assets/network_logo/starname.png'
-
+import KiIcon from '../../assets/network_logo/ki.png'
+import KujiraIcon from '../../assets/network_logo/kuji.svg'
+import PersistenceIcon from '../../assets/network_logo/persistence.png'
+import Crypto_orgIcon from '../../assets/network_logo/crypto_org.png'
+import ComdexIcon from '../../assets/network_logo/comdex.svg'
+import Regen_networkIcon from '../../assets/network_logo/regen.png'
+import E_moneyIcon from '../../assets/network_logo/emoney.svg'
+import SentinelIcon from '../../assets/network_logo/sentinel.png'
+import UmeeIcon from '../../assets/network_logo/umee.svg'
+import BitcannaIcon from '../../assets/network_logo/bitcanna.svg'
+import DesmosIcon from '../../assets/network_logo/desmos.svg'
+import Lum_networkIcon from '../../assets/network_logo/lumnetwork.svg'
+import ThorChainIcon from '../../assets/network_logo/thorchain.svg'
+import LitecoinIcon from '../../assets/network_logo/ltc.svg'
+import BitcoinCashIcon from '../../assets/network_logo/bch.svg'
+import SolanaIcon from '../../assets/network_logo/solana.svg'
 export const modalType = {
   from: "from",
   to: "to",
@@ -99,6 +114,13 @@ export const swapNetworks = [
     logo: BandchainIcon,
   },
   {
+    blockchain: 'BITCANNA',
+    name: 'Bitcanna',
+    chainId: 'bitcanna-1',
+    id: 'bitcanna',
+    logo: BitcannaIcon
+  },
+  {
     blockchain: 'BOBA',
     name: 'BOBA',
     chainId: 288,
@@ -127,6 +149,13 @@ export const swapNetworks = [
     logo: ChihuahuaIcon,
   },
   {
+    blockchain: 'COMDEX',
+    name: 'COMDEX',
+    chainId:'comdex-1',
+    id: 'comdex',
+    logo: ComdexIcon
+  },
+  {
     blockchain: 'COSMOS',
     name: 'COSMOS',
     chainId: 'cosmoshub-4',
@@ -134,11 +163,33 @@ export const swapNetworks = [
     logo: CosmosIcon,
   },
   {
+    blockchain: 'CRYPTO_ORG',
+    name: 'Crypto.org',
+    chainId: 'crypto-org-chain-mainnet-1',
+    id: 'crypto.org',
+    logo: Crypto_orgIcon
+
+  },
+  {
     blockchain: 'CRONOS',
     name: 'CRONOS',
     chainId: 25,
     id: 'cronos',
     logo: CronosIcon,
+  },
+  {
+    blockchain: 'DESMOS',
+    name: 'Desmos',
+    chainId: 'desmos-mainnet',
+    id: 'desmos',
+    logo: DesmosIcon
+  },
+  {
+    blockchain: 'EMONEY',
+    name: 'e-money',
+    chainId: 'emoney-3',
+    id: 'e-money',
+    logo: E_moneyIcon,
   },
   {
     blockchain: 'ETH',
@@ -205,6 +256,27 @@ export const swapNetworks = [
     logo: JunoIcon,
   },
   {
+    blockchain: 'KI',
+    name: 'KI',
+    chainId: 'Kichain-2',
+    id: 'ki',
+    logo: KiIcon,
+  },
+  {
+    blockchain: 'KUJIRA',
+    name: 'KUJIRA',
+    chainId: 'kaiyo-1',
+    id: 'kujira',
+    logo: KujiraIcon
+  },
+  {
+    blockchain: 'LUMNETWORK',
+    name: 'Lum Network',
+    chainId: 'lum-network-1',
+    id: 'lumnetwork',
+    logo: Lum_networkIcon
+  },
+  {
     blockchain: 'MOONBEAM',
     name: 'MOONBEAM',
     chainId: 1284,
@@ -240,11 +312,32 @@ export const swapNetworks = [
     logo: OsmosisIcon,
   },
   {
+    blockchain: 'PERSISTENCE',
+    name: 'PERSISTENCE',
+    chainId: 'core-1',
+    id: 'persistence',
+    logo: PersistenceIcon
+  },
+  {
     blockchain: 'POLYGON',
     name: 'POLYGON',
     chainId: 137,
     id: 'polygon',
     logo: PolygonIcon,
+  },
+  {
+    blockchain: 'REGEN',
+    name:'Regen Network',
+    chainId: 'regen-1',
+    id: 'regen',
+    logo: Regen_networkIcon
+  },
+  {
+    blockchain: 'SENTINEL',
+    name: 'Sentinel',
+    chainId: 'sentinelhub-2',
+    id: 'sentinel',
+    logo: SentinelIcon
   },
   {
     blockchain: "STARGAZE",
@@ -259,14 +352,49 @@ export const swapNetworks = [
     chainId: "iov-mainnet-ibc",
     id: "starname",
     logo: StarnameIcon, 
-  }  
-  // {
-  //   blockchain: "BTC",
-  //   name: "BTC",
-  //   chainId: "transfer",
-  //   id: "btc",
-  //   logo: BtcIcon,
-  // } 
+  },
+  {
+    blockchain: 'UMEE',
+    name: 'Umee',
+    chainId: 'umee-1',
+    id: 'umee',
+    logo: UmeeIcon
+  },
+  {
+    blockchain: 'THOR',
+    name: 'Thorchain',
+    chainId: '',
+    id: 'thorchain',
+    logo: ThorChainIcon
+  },  
+//   {
+//     blockchain: "BTC",
+//     name: "Bitcoin",
+//     chainId: "",
+//     id: "btc",
+//     logo: BtcIcon,
+//   }, 
+//   {
+//     blockchain: 'LTC',
+//     name: 'Litecoin',
+//     chainId: '',
+//     id: 'litecoin',
+//     logo: LitecoinIcon
+//   },
+//   {
+//     blockchain: 'BCH',
+//     name: 'Bitcoin Cash',
+//     chainId: '',
+//     id: 'bch',
+//     logo: BitcoinCashIcon
+//   },
+//   {
+//     blockchain: 'SOLANA',
+//     name: 'Solana',
+//     chainId: 'SOLANA',
+//     id: 'solana',
+//     logo: SolanaIcon
+//   }
 ];
 
 export const slippageList = [
