@@ -13,21 +13,24 @@ function WalletModal(props) {
   const walletInfo = wallets;
   const checkWalletInstall = () => {
     if (typeof window.ethereum !== 'undefined') {
-      window.ethereum.providers.forEach(async (p) => {
-        if (p.isMetaMask) {
-          walletInfo[0].status = "disconnect";
-        }
-        if (p.isTrustWallet) {
-          walletInfo[3].status = 'disconnect';
-        }
-        if (p.isCoin98) {
-          walletInfo[4].status = 'disconnect'
-        }
-        if (p.isCoinbaseWallet) {
-          walletInfo[5].status = 'disconnect';
-        }
 
-      });
+      if (window.ethereum.providers) {
+        window.ethereum.providers.forEach(async (p) => {
+          if (p.isMetaMask) {
+            walletInfo[0].status = "disconnect";
+          }
+          if (p.isTrustWallet) {
+            walletInfo[3].status = 'disconnect';
+          }
+          if (p.isCoin98) {
+            walletInfo[4].status = 'disconnect'
+          }
+          if (p.isCoinbaseWallet) {
+            walletInfo[5].status = 'disconnect';
+          } 
+        });
+      }
+
       // if (window.ethereum.isMetaMask) {
       //   walletInfo[0].status = "disconnect";
       // }
@@ -77,7 +80,7 @@ function WalletModal(props) {
   }
 
   useEffect(() => {
-    console.log("ethereum",  window.ethereum.providers);
+    // console.log("ethereum",  window.ethereum.providers);
     checkWalletInstall();
     
   }, []);
