@@ -1,5 +1,5 @@
 import React, { useState, ReactElement, useContext, useMemo, useCallback } from "react";
-import Web3Modal from "web3modal";
+// import Web3Modal from "web3modal";
 import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { IFrameEthereumProvider } from "@ledgerhq/iframe-provider";
@@ -10,7 +10,10 @@ import { chains } from "src/providers";
 import { isDexLoading, isDexPage, requireAssetMessage } from "../helpers/Dex";
 import detectEthereumProvider from '@metamask/detect-provider'
 import { ethers } from 'ethers'
-
+import { getKeplr } from "../helpers/Dex";
+// import { Cosmos } from "@keplr-wallet/cosmos"
+import Long from "long";
+import { AnyArray } from "immer/dist/internal";
 
 declare const window: any;
 
@@ -21,9 +24,11 @@ function isIframe() {
   return window.location !== window.parent.location;
 }
 
-function getURI(networkId: NetworkId): string {
-  return chains[networkId].rpcUrls[0];
-}
+// function getURI(networkId: NetworkId): string {
+//   return chains[networkId].rpcUrls[0];
+// }
+
+
 
 /*
   Types
@@ -34,7 +39,9 @@ type onChainProvider = {
   provider: JsonRpcProvider | null;
   address: string;
   connected: Boolean;
-  web3Modal: Web3Modal;
+  // addresses: Array<object>;
+  walletstatus: string;
+  // web3Modal: Web3Modal;
 };
 
 export type Web3ContextData = {
@@ -55,6 +62,7 @@ export const useWeb3Context = () => {
     return {...onChainProvider};
   }, [web3Context]);
 };
+
 
 export const useAddress = () => {
   const {address} = useWeb3Context();
@@ -85,28 +93,30 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({child
   const [chainId, setChainId] = useState(defaultNetworkId);
   const [address, setAddress] = useState("");
   const [provider, setProvider] = useState<JsonRpcProvider | null>(null);
+  const [addresses, setAddresses] = useState([]);
+  const [walletstatus, setWalletstatus] = useState("");
+  // const [keplr, setKeplr] = useState<Keplr | undefined>(undefined);
+  // const rpcUris = enabledNetworkIds.reduce((rpcUris: { [key: string]: string }, networkId) => (rpcUris[networkId] = getURI(networkId), rpcUris), {});
 
-  const rpcUris = enabledNetworkIds.reduce((rpcUris: { [key: string]: string }, networkId) => (rpcUris[networkId] = getURI(networkId), rpcUris), {});
+  // const [web3Modal, setWeb3Modal] = useState<Web3Modal>(
+  //   new Web3Modal({
+  //     cacheProvider: true, // optional
+  //     providerOptions: {
+  //       walletconnect: {
+  //         package: WalletConnectProvider,
+  //         options: {
+  //           rpc: rpcUris,
+  //         },
+  //       },
+  //     },
+  //   }),
+  // );
 
-  const [web3Modal, setWeb3Modal] = useState<Web3Modal>(
-    new Web3Modal({
-      cacheProvider: true, // optional
-      providerOptions: {
-        walletconnect: {
-          package: WalletConnectProvider,
-          options: {
-            rpc: rpcUris,
-          },
-        },
-      },
-    }),
-  );
-
-  const hasCachedProvider = (): Boolean => {
-    if (!web3Modal) return false;
-    if (!web3Modal.cachedProvider) return false;
-    return true;
-  };
+  // const hasCachedProvider = (): Boolean => {
+  //   if (!web3Modal) return false;
+  //   if (!web3Modal.cachedProvider) return false;
+  //   return true;
+  // };
 
   // NOTE (appleseed): none of these listeners are needed for Backend API Providers
   // ... so I changed these listeners so that they only apply to walletProviders, eliminating
@@ -226,6 +236,57 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({child
     }
   };
 
+  
+
+  const getUserWallet = async (status:any) => {
+    const cosmosPopularChains: { name: string; chainId: string; supportedWallet: AnyArray }[] = [
+      { name: 'AKASH', chainId: 'akashnet-2', supportedWallet:["keplr", "Cosmostation", "leap"] },
+      { name: 'BANDCHAIN', chainId: 'injective-1', supportedWallet:["Cosmostation", "Coin98", "Frontier"] },
+      { name: 'BITCANNA', chainId: 'bitcanna-1', supportedWallet:["Cosmostation", "leap"] },
+      { name: 'BNB', chainId: 'binance-chain-tigris', supportedWallet:["Binance", "Coin98"] },
+      { name: 'CHIHUAHUA', chainId: 'chihuahua-1', supportedWallet:["Cosmostation", "leap"] },
+      { name: 'COMDEX', chainId: 'comdex-1', supportedWallet:["Cosmostation", "leap"] },
+      { name: 'COSMOS', chainId: 'cosmoshub-4', supportedWallet:["keplr", "Cosmostation", "leap", "Frontier"] },
+      { name: 'CRYPTO_ORG', chainId: 'crypto-org-chain-mainnet-1', supportedWallet:["keplr", "Cosmostation", "Frontier"] },
+      { name: 'DESMOS', chainId: 'desmos-mainnet', supportedWallet:["Cosmostation", "leap"] },
+      { name: 'EMONEY', chainId: 'emoney-3', supportedWallet:["keplr", "Cosmostation", "leap", "Frontier"] },
+      { name: 'IRIS', chainId: 'irishub-1', supportedWallet:["keplr", "Cosmostation", "leap", "Coin98"] },
+      { name: 'JUNO', chainId: 'juno-1', supportedWallet:["keplr", "Cosmostation", "leap"] },
+      { name: 'KI', chainId: 'kichain-2', supportedWallet:["Cosmostation"] },
+      { name: 'KUJIRA', chainId: 'kaiyo-1', supportedWallet:["Cosmostation", "leap", "Coin98"] },
+      { name: 'LUMNETWORK', chainId: 'lum-network-1', supportedWallet:["Cosmostation"] },
+      { name: 'OSMOSIS', chainId: 'osmosis-1', supportedWallet:["keplr", "Cosmostation", "leap", "Coin98", "Frontier"] },
+      { name: 'PERSISTENCE', chainId: 'core-1', supportedWallet:["keplr", "Cosmostation", "leap", "Coin98", "Frontier"] },
+      { name: 'REGEN', chainId: 'regen-1', supportedWallet:["keplr", "Cosmostation"] },
+      { name: 'SENTINEL', chainId: 'sentinelhub-2', supportedWallet:["keplr", "Cosmostation"] },
+      { name: 'STARGAZE', chainId: 'stargaze-1', supportedWallet:["keplr", "Cosmostation", "leap", "Coin98"] },
+      { name: 'STARNAME', chainId: 'iov-mainnet-ibc', supportedWallet:["keplr", "Cosmostation", "leap"] },
+      { name: 'UMEE', chainId: 'umee-1', supportedWallet:["keplr", "Cosmostation", "leap", "Coin98", "Frontier"] },
+      { name: 'THOR', chainId: '', supportedWallet:["Coin98"] },
+      
+    ]
+    const supportedChain = cosmosPopularChains.filter(chain =>{
+      return chain.supportedWallet.find(wallet => wallet == status)
+    })
+    const chainIds = supportedChain.map(chainInfo => chainInfo.chainId)
+    const keplr = await getKeplr(status);
+    if (!keplr) return []
+    await keplr.enable(chainIds)
+    let connectedWallets :AnyArray = []
+    
+    console.log("supprotedchain", supportedChain)
+    for (let chain of supportedChain) {
+      const offlineSigner = keplr.getOfflineSigner(chain.chainId)
+      const accounts = await offlineSigner?.getAccounts()
+      if (!!accounts && accounts.length > 0) {
+        const address = accounts.map((account: { address: string }) => { return account.address })
+        connectedWallets.push({ blockchain: chain.name, addresses: address, })
+      }
+      console.log("connectedwallets", connectedWallets)
+    }
+    return connectedWallets
+  }
+
   // connect - only runs for WalletProviders
   const connect = useCallback(async (status) => {
     // handling Ledger Live;
@@ -233,6 +294,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({child
     let connectedProvider;
     let chainId;
     let connectedAddress;
+
     if (status == "Metamask") {      
       if (isIframe()) {
         rawProvider = new IFrameEthereumProvider();
@@ -272,7 +334,6 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({child
       connectedProvider = new Web3Provider(rawProvider as any);;
       chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
       connectedAddress = await connectedProvider.getSigner().getAddress();
-      console.log("adress", connectedAddress)
       setAddress(connectedAddress);
       // if (isIframe()) {
       //   rawProvider = new IFrameEthereumProvider();
@@ -307,9 +368,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({child
       await rawProvider.send('eth_requestAccounts', [])
       connectedProvider = rawProvider;
       chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
-      console.log("chainide", chainId);
       connectedAddress = await connectedProvider.getSigner().getAddress();
-      console.log("adress", connectedAddress)
       setAddress(connectedAddress);
     }
 
@@ -319,7 +378,6 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({child
       connectedProvider = rawProvider;
       chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
       connectedAddress = await connectedProvider.getSigner().getAddress();
-      console.log("adress", connectedAddress)
       setAddress(connectedAddress);
     }   
 
@@ -328,9 +386,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({child
       await rawProvider.send('eth_requestAccounts', [])
       connectedProvider = rawProvider;
       chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
-      console.log("chainide", chainId);
       connectedAddress = await connectedProvider.getSigner().getAddress();
-      console.log("adress", connectedAddress)
       setAddress(connectedAddress);
 
     } 
@@ -347,35 +403,122 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({child
     if (status == "Exdous") {
       rawProvider = new ethers.providers.Web3Provider(window.ethereum)
       await rawProvider.send('eth_requestAccounts', [])
-    }      
+      connectedProvider = rawProvider;
+      chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
+      connectedAddress = await connectedProvider.getSigner().getAddress();
+      setAddress(connectedAddress);
+    }
+    if (status == "Frontier") {
+      rawProvider = new ethers.providers.Web3Provider(window.frontier.ethereum)
+      await rawProvider.send('eth_requestAccounts', [])
+      connectedProvider = rawProvider;
+      chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
+      connectedAddress = await connectedProvider.getSigner().getAddress();
+      setAddress(connectedAddress);
+    }  
+    if (status == "Clover") {
+      rawProvider = new ethers.providers.Web3Provider(window.clover)
+      await rawProvider.send('eth_requestAccounts', [])
+      connectedProvider = rawProvider;
+      chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
+      connectedAddress = await connectedProvider.getSigner().getAddress();
+      setAddress(connectedAddress);
+    }
+    if (status == 'XDefi') {
+      rawProvider = new ethers.providers.Web3Provider(window.ethereum)
+      await rawProvider.send('eth_requestAccounts', [])
+      connectedProvider = rawProvider;
+      chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
+      connectedAddress = await connectedProvider.getSigner().getAddress();
+      setAddress(connectedAddress);
+    } 
+    if (status == 'Safepal') {
+      rawProvider = new ethers.providers.Web3Provider(window.ethereum)
+      await rawProvider.send('eth_requestAccounts', [])
+      connectedProvider = rawProvider;
+      chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
+      connectedAddress = await connectedProvider.getSigner().getAddress();
+      setAddress(connectedAddress);
+    }
+    if (status == 'Tokenpocket') {
+      rawProvider = new ethers.providers.Web3Provider(window.ethereum)
+      await rawProvider.send('eth_requestAccounts', [])
+      connectedProvider = rawProvider;
+      chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
+      connectedAddress = await connectedProvider.getSigner().getAddress();
+      setAddress(connectedAddress);
+    }
+    if (status == 'Okx') {
+      rawProvider = new ethers.providers.Web3Provider(window.okexchain)
+      await rawProvider.send('eth_requestAccounts', [])
+      connectedProvider = rawProvider;
+      chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
+      connectedAddress = await connectedProvider.getSigner().getAddress();
+      setAddress(connectedAddress);
+    }
+    if (status == 'MathWallet') {
+      rawProvider = new ethers.providers.Web3Provider(window.ethereum)
+      await rawProvider.send('eth_requestAccounts', [])
+      connectedProvider = rawProvider;
+      chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
+      connectedAddress = await connectedProvider.getSigner().getAddress();
+      setAddress(connectedAddress);
+    } 
+    if (status == 'Cosmostation') {
+
+      rawProvider = new ethers.providers.Web3Provider(window.cosmostation.ethereum)
+      await rawProvider.send('eth_requestAccounts', [])
+      connectedProvider = rawProvider;
+      chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
+      connectedAddress = await connectedProvider.getSigner().getAddress();
+      setAddress(connectedAddress);
+      let cosmosaddresses:any ;
+      cosmosaddresses = getUserWallet(status);
+      setAddresses(cosmosaddresses);
+      setWalletstatus(status);
+    }
+    if (status == 'keplr') {
+      let cosmosaddresses :any;
+      cosmosaddresses = getUserWallet(status);
+      
+      setAddresses(cosmosaddresses);
+      setWalletstatus(status);
+    }
+    if (status == 'leap') {
+      let cosmosaddresses:any ;
+      cosmosaddresses = getUserWallet(status);
+      console.log("keplr", cosmosaddresses)
+      setAddresses(cosmosaddresses);
+      setWalletstatus(status);
+    }
     // Keep this at the bottom of the method, to ensure any repaints have the data we need
     setConnected(true);
     return connectedProvider;    
-  }, [provider, web3Modal, connected]);
+  }, [provider, connected,address, addresses, walletstatus]);//add web3 modeal
 
   const disconnect = useCallback(async () => {
     console.log("disconnecting");
-    web3Modal.clearCachedProvider();
+    // web3Modal.clearCachedProvider();
     setConnected(false);
 
     setTimeout(() => {
       window.location.reload();
     }, 1);
-  }, [provider, web3Modal, connected]);
+  }, [provider, connected]);//add web3 modeal
 
   const onChainProvider = useMemo(
     () => ({
       connect,
       disconnect,
-      hasCachedProvider,
       switchEthereumChain,
       provider,
       connected,
       address,
       chainId,
-      web3Modal,
+      walletstatus,
+      addresses
     }),
-    [connect, disconnect, hasCachedProvider, provider, connected, address, chainId, web3Modal],
+    [connect, disconnect, provider, connected, address, chainId, walletstatus, addresses],
   );
 
   return <Web3Context.Provider value={{onChainProvider}}>{children}</Web3Context.Provider>;

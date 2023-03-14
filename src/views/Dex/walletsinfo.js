@@ -1,5 +1,4 @@
 import binance from './WalletImages/Binance.svg';
-import brave from './WalletImages/Brave.png';
 import clover from './WalletImages/Clover.jfif';
 import coin98 from './WalletImages/Coin98.svg';
 import coinbase from './WalletImages/Coinbase.svg';
@@ -16,102 +15,120 @@ import trustwallet from './WalletImages/TrustWallet.png';
 import walletconnect from './WalletImages/WalletConnect.svg';
 import xdefi from './WalletImages/XDefi.jfif';
 import frontier from './WalletImages/Frontier.png';
+import leap_cosmos from './WalletImages/leap_cosmos.png';
 export const wallets = [
     {
         logo:metamask,
         name:"Metamask",
         status:"install",
-        id: 1
+        id: 0
     },
     {
         logo:walletconnect,
         name:"WallectConect",
         status:"disconnect",
-        id: 2
+        id: 1
     },
-    // {
-    //     logo:kepir,
-    //     name:"Kepir",
-    //     status:"install",
-    //     id: 3
-    // },
     {
         logo:binance,
         name:"Binance",
         status:"install",
-        id: 4
+        id: 2
     },
     {
         logo:trustwallet,
         name:"TrustWallet",
         status:"install",
-        id: 5,
-    },
-    
+        id: 3,
+    },   
     {
         logo:coin98,
         name:"Coin98",
         status:"install",
-        id: 6,
+        id: 4,
     },
     {
         logo:coinbase,
         name:"Coinbase",
         status:"install",
+        id: 5
+    },
+    {
+        logo:exdous,
+        name:"Exdous",
+        status:"install",
+        id: 6
+    },
+    {
+        logo: frontier,
+        name: "Frontier",
+        status: "install",
         id: 7
     },
-    // {
-    //     logo: frontier,
-    //     name: "Frontier",
-    //     status: "install",
-    //     id: 8
-    // },
-    // {
-    //     logo:clover,
-    //     name:"Clover",
-    //     status:"install",
-    //     id: 9
-    // },   
-    // {
-    //     logo:cosmostation,
-    //     name:"Cosmostation",
-    //     status:"install",
-    //     id: 10
-    // },
-    // {
-    //     logo:exdous,
-    //     name:"Exdous",
-    //     status:"install",
-    //     id: 11
-    // },
-    // {
-    //     logo:okx,
-    //     name:"Okx",
-    //     status:"Not supported yet",
-    //     id: 12
-    // },
+    {
+        logo:clover,
+        name:"Clover",
+        status:"install",
+        id: 8
+    },
+    {
+        logo: xdefi,
+        name:"XDefi",
+        status:"install",
+        id: 9
+    },
+    {
+        logo: safepal,
+        name:"Safepal",
+        status:"install",
+        id: 10
+    },
+    {
+        logo:tokenpocket,
+        name:"Tokenpocket",
+        status:"install",
+        id: 11
+    },
+    {
+        logo:okx,
+        name:"Okx",
+        status:"install",
+        id: 12
+    }, 
+    {
+        logo:mathwallet,
+        name: 'MathWallet',
+        status: 'install',
+        id: 13
+    }, 
+    {
+        logo:cosmostation,
+        name:"Cosmostation",
+        status:"install",
+        id: 14
+    },
+    {
+        logo:kepir,
+        name:"keplr",
+        status:"install",
+        id: 15
+    },
+    {
+        logo: leap_cosmos,
+        name: 'leap',
+        status: 'install',
+        id: 16
+    }
+
+
+
     // {
     //     logo:phantom,
     //     name:"Phantom",
     //     status:"Not supported yet",
     //     id: 13
     // },
-    // {
-    //     logo: safepal,
-    //     name:"Safepal",
-    //     status:"Not supported yet",
-    //     id: 14
-    // },
-    // {
-    //     logo:tokenpocket,
-    //     name:"Tokenpocket",
-    //     status:"Not supported yet",
-    //     id: 15
-    // },   
-    // {
-    //     logo: xdefi,
-    //     name:"XDefi",
-    //     status:"Not supported yet",
-    //     id: 16
-    // },
+
+  
+
 ]

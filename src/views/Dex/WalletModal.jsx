@@ -1,6 +1,7 @@
 import { Modal, Box, Typography, Fade } from "@material-ui/core";
 import { memo, useEffect } from "react";
 import CloseIcon from "@material-ui/icons/Close";
+import detectEthereumProvider from '@metamask/detect-provider'
 import { wallets } from "./walletsinfo";
 import "./dex.scss";
 // import detectEthereumProvider from '@metamask/detect-provider';
@@ -11,14 +12,15 @@ function WalletModal(props) {
 
   const { connect } = useWeb3Context();
   const walletInfo = wallets;
-  const checkWalletInstall = () => {
+  const checkWalletInstall = async () => {
+   const rawProvider = await detectEthereumProvider({ mustBeMetaMask: true });
+    if(rawProvider) {
+      walletInfo[0].status = "disconnect";
+    }
     if (typeof window.ethereum !== 'undefined') {
 
       if (window.ethereum.providers) {
         window.ethereum.providers.forEach(async (p) => {
-          if (p.isMetaMask) {
-            walletInfo[0].status = "disconnect";
-          }
           if (p.isTrustWallet) {
             walletInfo[3].status = 'disconnect';
           }
@@ -28,26 +30,51 @@ function WalletModal(props) {
           if (p.isCoinbaseWallet) {
             walletInfo[5].status = 'disconnect';
           } 
+          if (p.isExodus) {
+            walletInfo[6].status = 'disconnect';
+          }
+          if (p.isXDEFI) {
+            walletInfo[9].status = 'disconnect';
+          }
+          if (p.isSafePal) {
+            walletInfo[10].status = 'disconnect';
+          }
+          if (p.isTokenPocket) {
+            walletInfo[11].status = 'disconnect';
+          }
+          if (p.isMathWallet) {
+            walletInfo[13].status = 'disconnect';
+          }
         });
+      } else {
+        if (window.ethereum.isTrustWallet) {
+          walletInfo[3].status = 'disconnect';
+        }
+
+        if (window.ethereum?.isCoin98) {
+          walletInfo[4].status = 'disconnect';
+        }
+        if (window.ethereum.isCoinbaseWallet) {
+          walletInfo[5].status = 'disconnect';
+        }
+        if (window.ethereum.isExodus) {
+          walletInfo[6].status = 'disconnect';
+        }
+        if (window.ethereum.isXDEFI) {
+          walletInfo[9].status = 'disconnect';
+        }
+        if (window.ethereum.isSafePal) {
+          walletInfo[10].status = 'disconnect';
+        }
+        if (window.ethereum.isTokenPocket) {
+          walletInfo[11].status = 'disconnect';
+        }
+        if (window.ethereum.isMathWallet) {
+          walletInfo[13].status = 'disconnect';
+        }
       }
 
-      // if (window.ethereum.isMetaMask) {
-      //   walletInfo[0].status = "disconnect";
-      // }
-
-      // if (window.ethereum.isTrustWallet) {
-      //   walletInfo[3].status = 'disconnect';
-      // }
-
-      // if (window.ethereum?.isCoin98) {
-      //   walletInfo[4].status = 'disconnect';
-      // }
-      // if (window.ethereum.isCoinbaseWallet) {
-      //   walletInfo[5].status = 'disconnect';
-      // }
-      // if (window.ethereum.isExodus) {
-      //   walletInfo[10].status = 'disconnect';
-      // }
+      
       
     }
     // if (typeof window.keplr !== 'undefined') {
@@ -56,16 +83,24 @@ function WalletModal(props) {
     if ( typeof window.BinanceChain !== 'undefined') {
       walletInfo[2].status = 'disconnect';
     }
-    // if (typeof window.frontier !== 'undefined') {
-    //   walletInfo[7].status = "disconnect";
-    // }
-
-    // if (typeof window.clover !== 'undefined') {
-    //   walletInfo[8].status = 'disconnect';
-    // }
-    // if (typeof window.cosmostation !== 'undefined') {
-    //   walletInfo[9].status = 'disconnect';
-    // }
+    if (typeof window.frontier !== 'undefined') {
+      walletInfo[7].status = "disconnect";
+    }
+    if (typeof window.clover !== 'undefined') {
+      walletInfo[8].status = 'disconnect';
+    }
+    if (typeof window.okexchain !== 'undefined') {
+      walletInfo[12].status = 'disconnect';
+    }
+    if (typeof window.cosmostation !== 'undefined') {
+      walletInfo[14].status = 'disconnect';
+    }
+    if (typeof window.keplr !== 'undefined') {
+      walletInfo[15].status = 'disconnect';
+    }
+    if (typeof window.leap !== 'undefined') {
+      walletInfo[16].status = 'disconnect';
+    }
      
   }
 
@@ -80,7 +115,7 @@ function WalletModal(props) {
   }
 
   useEffect(() => {
-    // console.log("ethereum",  window.ethereum.providers);
+    console.log("ethereum", window.leap);
     checkWalletInstall();
     
   }, []);

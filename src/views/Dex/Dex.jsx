@@ -16,6 +16,8 @@ import { swapNetworks, modalType } from "./data";
 import { RANGO_API_KEY, RANGO_AFFILIATE_REF_ID, FEE_CONTRACT } from "../../constants";
 import { getSavedNetworkId } from "../../hooks/web3Context";
 import {
+  getKeplr,
+  executeCosmosTransaction,
   formatAmount,
   getDownRate,
   expectSwapErrors,
@@ -46,7 +48,7 @@ function Dex() {
 
   const dispatch = useDispatch();
 
-  const { provider, connect, switchEthereumChain, address } = useWeb3Context();
+  const { provider, connect, switchEthereumChain, address, addresses, walletstatus } = useWeb3Context();
   const [fromNetworkModalOpen, setFromNetworkModalOpen] = useState(false);
   const [fromTokenModalOpen, setFromTokenModalOpen] = useState(false);
   const [fromNetwork, setFromNetwork] = useState(null);
@@ -91,7 +93,7 @@ function Dex() {
   };
 
   const outOfService = (chainName) => {
-    dispatch(info(`Swap on ${chainName} chain is currently out of service.`));
+    dispatch(info(`You need to add wallets for ${chainName} chain. Current there is no reasonable wallet.`));
   };
 
   const isSwappable = () => {
@@ -107,9 +109,9 @@ function Dex() {
       return;
     }
     setInitialLoading(true);
-    const toNetwork = swapNetworks[2];
+    const toNetwork = swapNetworks[8];
     let fromNetwork;
-    fromNetwork = swapNetworks[0];
+    fromNetwork = swapNetworks[16];
     setFromNetwork(fromNetwork);
     setToNetwork(toNetwork);
     setInitialLoading(false);
@@ -123,6 +125,8 @@ function Dex() {
   };
 
   const opeNetworkModal = (type) => {
+    let cosmosWallets = addresses;
+    console.log("cosmoswalletes", cosmosWallets);
     if (type === modalType.from) {
       setFromNetworkModalOpen(true);
     } else {
@@ -146,6 +150,7 @@ function Dex() {
   };
 
   const closeNetworkModal = (type, network) => {
+
     closeAllModal();
     if (!network) {
       return;
@@ -192,15 +197,31 @@ function Dex() {
     }
     setFromTokenList(fromTokenList);
     setFromSearchTokenList(fromTokenList);
-    if (!address) {
+    
+    if (!address && !addresses) {
       sortTokenList(fromNetwork, fromTokenList);
       setFromToken(fromTokenList[0]);
       setFromUpdateTokenLoading(false);
       return;
     }
+
+    const networkType = networkInfo(fromNetwork.blockchain)
+    let addressFromNetwork;
+    if (networkType == "EVM") {
+      addressFromNetwork = address;
+    } else if (networkType == "COSMOS") {
+      let cosmosAddresses = await addresses;
+      addressFromNetwork = (cosmosAddresses.filter(network => network.blockchain == fromNetwork.blockchain))
+      if (addressFromNetwork.length > 0) {
+        addressFromNetwork =addressFromNetwork[0].addresses[0]
+      } else {
+        addressFromNetwork = "";
+      }
+    }
+    console.log("addressFromNetwork", addressFromNetwork)
     const walletDetails = await rangoClient.getWalletsDetails([{
       blockchain: fromNetwork?.blockchain,
-      address: address,
+      address: addressFromNetwork,
     }]);
     walletDetails.wallets.forEach(wallet => {
       if (wallet.balances) {
@@ -232,7 +253,7 @@ function Dex() {
     }
     setToTokenList(toTokenList);
     setToSearchTokenList(toTokenList);
-    if (!address) {
+    if (!address && !addresses) {
       sortTokenList(toNetwork, toTokenList);
       if (!fromNetwork && fromNetwork?.blockchain === toNetwork?.blockchain) {
         setToToken(toTokenList[1]);
@@ -242,9 +263,23 @@ function Dex() {
       setToUpdateTokenLoading(false);
       return;
     }
+    const networkType = networkInfo(toNetwork.blockchain)
+    let addressToNetwork;
+    if (networkType == "EVM") {
+      addressToNetwork = address;
+    } else if (networkType == "COSMOS") {
+      let cosmosAddresses = await addresses;
+      addressToNetwork = (cosmosAddresses.filter(network => network.blockchain == toNetwork.blockchain));
+      if (addressToNetwork.length > 0) {
+        addressToNetwork =addressToNetwork[0].addresses[0]
+      } else {
+        addressToNetwork = "";
+      }
+    }
+    console.log("addressToNetwork", addressToNetwork)
     const walletDetails = await rangoClient.getWalletsDetails([{
       blockchain: toNetwork?.blockchain,
-      address: address,
+      address: addressToNetwork,
     }]);
     walletDetails.wallets.forEach(wallet => {
       if (wallet.balances) {
@@ -271,23 +306,65 @@ function Dex() {
   };
 
   const getBestRoute = async () => {
+    const cosmosAddresses = await addresses;
     setRouteLoading(true);
     setToTokenAmount("");
     let connectedWallets = [];
     const selectedWallets = {};
-    console.log("addressss", address);
     if (address) {
-      connectedWallets = swapNetworks.map(network => {
-        return {
-          blockchain: network?.blockchain,
-          addresses: [address],
-        };
-      });
-      selectedWallets[fromNetwork?.blockchain] = address;
-      if (fromNetwork?.chainId !== toNetwork?.chainId) {
-        selectedWallets[toNetwork?.blockchain] = address;
+      connectedWallets = swapNetworks.filter(network => network.type == "EVM")
+        .map(network => {
+          return {
+            blockchain: network?.blockchain,
+            addresses: [address],
+          };
+        })
+        
+      if (fromNetwork?.blockchain) {
+        const fromNetworkType = networkInfo(fromNetwork.blockchain)
+        if (fromNetworkType == "EVM") {
+          
+          selectedWallets[fromNetwork.blockchain] = address;
+          console.log("arrived EVM fromnetwork", selectedWallets[fromNetwork.blockchain])
+        }
+      }
+      
+      if (toNetwork?.blockchain) {
+        const toNetworkType = networkInfo(toNetwork.blockchain)
+        if (toNetworkType == "EVM" && fromNetwork?.chainId !== toNetwork?.chainId) {
+          
+          selectedWallets[toNetwork.blockchain] = address;
+          console.log("arrived EVMtonetwork", selectedWallets[toNetwork.blockchain])
+        }
+      }
+      
+    }
+    if (cosmosAddresses) {
+      cosmosAddresses.forEach(address => connectedWallets.push(address));
+      if (fromNetwork?.blockchain) {
+        const fromNetworkType = networkInfo(fromNetwork.blockchain)
+        if (fromNetworkType == "COSMOS") {
+          let networkData = cosmosAddresses.filter(network => network.blockchain == fromNetwork.blockchain);
+          console.log("arrived COSMOS fromnetwork 0", networkData[0].addresses[0])
+          selectedWallets[fromNetwork.blockchain] = networkData[0].addresses[0];
+          console.log("arrived COSMOS fromnetwork1", selectedWallets[fromNetwork.blockChain])
+          
+        }
+      }
+      if (toNetwork?.blockchain) {
+        const toNetworkType = networkInfo(toNetwork.blockchain)
+        if (toNetworkType == "COSMOS" && fromNetwork?.chainId !== toNetwork?.chainId) {
+          let networkData = (cosmosAddresses.filter(network => network.blockchain == toNetwork.blockchain))[0].addresses[0];
+          selectedWallets[toNetwork.blockchain] = networkData;
+          console.log("arrived cosmos tonetwork o", networkData)
+          console.log("asdfasdf", typeof networkData)
+          console.log("arrived COSMOS tonetwork 1", selectedWallets[toNetwork.blockchain])
+        }
       }
     }
+
+
+
     const from = {
       blockchain: fromToken?.blockchain,
       symbol: fromToken?.symbol,
@@ -459,77 +536,122 @@ function Dex() {
     
   }
 
+  const networkInfo = (currentNetwork) => {
+    const networkData = swapNetworks.find(network => {
+      if (currentNetwork == network.blockchain) {
+        return network
+      }
+    });
+    return networkData.type;
+  }
+
   const executeRoute = async (routeResponse, step) => {
-    if (routeResponse.result.swaps[step]) {
-      const network = swapNetworks.find(network => network.blockchain === routeResponse.result.swaps[step].from.blockchain);
-      if (network.chainId !== getSavedNetworkId()) {
-        messageDetail.details[step].text = `Please change your wallet network to ${ network.blockchain }`;
-        const result = await changeNetworks(network?.chainId);
-        if (!result) {
-          dispatch(closeAll());
-          return;
+    const fromNetwork = routeResponse.result.swaps[step].from.blockchain 
+    const networkData = networkInfo(fromNetwork);
+    if (networkData == "EVM") {
+      if (routeResponse.result.swaps[step]) {
+        const network = swapNetworks.find(network => network.blockchain === routeResponse.result.swaps[step].from.blockchain);
+        if (network.chainId !== getSavedNetworkId()) {
+          messageDetail.details[step].text = `Please change your wallet network to ${ network.blockchain }`;
+          const result = await changeNetworks(network?.chainId);
+          if (!result) {
+            dispatch(closeAll());
+            return;
+          }
         }
       }
-    }
-    messageDetail.details[step].text = `Sending request to ${ routeResponse.result.swaps[step].swapperId } for ${ routeResponse.result.swaps[step].from?.blockchain }.${ routeResponse.result.swaps[step].from?.symbol } token`;
-    messageDetail.step = step;
-    dispatch(multiChainSwap(JSON.parse(JSON.stringify(messageDetail))));
-    const signer = provider.getSigner();
-
-    let evmTransaction;
-    try {
-      while (true) {
-        const transactionResponse = await rangoClient.createTransaction({
-          requestId: routeResponse.requestId,
-          step: step + 1,
-          userSettings: { "slippage": slippage },
-          validations: { balance: true, fee: true },
-        });
-
-        evmTransaction = transactionResponse.transaction;
-        if (evmTransaction.isApprovalTx) {
-          const finalTx = prepareEvmTransaction(evmTransaction);
-          await signer.sendTransaction(finalTx);
-          await checkApprovalSync(routeResponse, rangoClient);
-        } else {
-          break;
-        }
-      }
-      const finalTx = prepareEvmTransaction(evmTransaction);
-      const txHash = (await signer.sendTransaction(finalTx)).hash;
-      messageDetail.details[step].text = `Request sent to ${ routeResponse.result.swaps[step].swapperId } for ${ routeResponse.result.swaps[step].from?.blockchain }.${ routeResponse.result.swaps[step].from?.symbol } token`;
-      messageDetail.details[step].txHash = txHash;
+      messageDetail.details[step].text = `Sending request to ${ routeResponse.result.swaps[step].swapperId } for ${ routeResponse.result.swaps[step].from?.blockchain }.${ routeResponse.result.swaps[step].from?.symbol } token`;
+      messageDetail.step = step;
       dispatch(multiChainSwap(JSON.parse(JSON.stringify(messageDetail))));
-      const txStatus = await checkTransactionStatusSync(txHash, routeResponse, rangoClient, step);
-      if (txStatus?.step>=routeResponse.result.swaps.length - 1) {
-        if (fromNetwork?.chainId === NetworkIds.FantomOpera || toNetwork?.chainId === NetworkIds.FantomOpera) {
-          setForceBondLoading(true);
+      const signer = provider.getSigner();
+  
+      let evmTransaction;
+      try {
+        while (true) {
+          const transactionResponse = await rangoClient.createTransaction({
+            requestId: routeResponse.requestId,
+            step: step + 1,
+            userSettings: { "slippage": slippage },
+            validations: { balance: true, fee: true },
+          });
+  
+          evmTransaction = transactionResponse.transaction;
+          if (evmTransaction.isApprovalTx) {
+            const finalTx = prepareEvmTransaction(evmTransaction);
+            await signer.sendTransaction(finalTx);
+            await checkApprovalSync(routeResponse, rangoClient);
+          } else {
+            break;
+          }
         }
+        const finalTx = prepareEvmTransaction(evmTransaction);
+        const txHash = (await signer.sendTransaction(finalTx)).hash;
+        messageDetail.details[step].text = `Request sent to ${ routeResponse.result.swaps[step].swapperId } for ${ routeResponse.result.swaps[step].from?.blockchain }.${ routeResponse.result.swaps[step].from?.symbol } token`;
+        messageDetail.details[step].txHash = txHash;
+        dispatch(multiChainSwap(JSON.parse(JSON.stringify(messageDetail))));
+        const txStatus = await checkTransactionStatusSync(txHash, routeResponse, rangoClient, step);
+        if (txStatus?.step>=routeResponse.result.swaps.length - 1) {
+          if (fromNetwork?.chainId === NetworkIds.FantomOpera || toNetwork?.chainId === NetworkIds.FantomOpera) {
+            setForceBondLoading(true);
+          }
+          setSwapLoading(false);
+          setBestRoute(null);
+          setFromTokenAmount("");
+          setToTokenAmount("");
+          dispatch(closeAll());
+          await fromNetworkDetails(fromNetwork);
+          await toNetworkDetails(toNetwork);
+        }
+        return txStatus;
+      } catch (e) {
         setSwapLoading(false);
-        setBestRoute(null);
-        setFromTokenAmount("");
-        setToTokenAmount("");
+        const rawMessage = JSON.stringify(e).substring(0, 90) + "...";
+        await rangoClient.reportFailure({
+          data: { message: rawMessage },
+          eventType: "TX_FAIL",
+          requestId: routeResponse.requestId,
+        });
         dispatch(closeAll());
+        setBestRoute(null);
         await fromNetworkDetails(fromNetwork);
         await toNetworkDetails(toNetwork);
+        return {
+          status: TransactionStatus.FAILED,
+        };
       }
-      return txStatus;
+    } 
+    
+    if (networkData == "COSMOS") {
+      let cosmosTransaction
+    try {
+      const transactionResponse = await rangoClient.createTransaction({
+        requestId: routeResponse.requestId,
+        step: step + 1,
+        userSettings: { "slippage": slippage },
+        validations: { balance: true, fee: true },
+      })
+
+      // in general case, you should check transaction type and call related provider to sign and send tx
+      cosmosTransaction = transactionResponse.transaction
+
+      const txHash = await executeCosmosTransaction(cosmosTransaction, walletstatus)
+      const txStatus = await checkTransactionStatusSync(txHash, routeResponse, rangoClient)
+      console.log("transaction finished", {txStatus})
+      setLoadingSwap(false)
     } catch (e) {
-      setSwapLoading(false);
-      const rawMessage = JSON.stringify(e).substring(0, 90) + "...";
+      let rawMessage = (JSON.stringify(e)).substring(0, 90) + '...'
+      if (e instanceof Error) rawMessage = e.message
+      setLoadingSwap(false)
+      setError(rawMessage)
+      // report transaction failure to server if something went wrong in client for signing and sending the transaction
       await rangoClient.reportFailure({
         data: { message: rawMessage },
-        eventType: "TX_FAIL",
+        eventType: 'TX_FAIL',
         requestId: routeResponse.requestId,
-      });
-      dispatch(closeAll());
-      setBestRoute(null);
-      await fromNetworkDetails(fromNetwork);
-      await toNetworkDetails(toNetwork);
-      return {
-        status: TransactionStatus.FAILED,
-      };
+      })
     }
+    }
+    
   };
 
   const checkTransactionStatusSync = async (txHash, bestRoute, rangoClient, step) => {
@@ -557,6 +679,7 @@ function Dex() {
   }, [metaData, address]);
 
   useEffect(() => {
+    
     if (!fromNetwork || !toNetwork) {
       return;
     }
