@@ -11,7 +11,6 @@ import { ReactComponent as PolygonIcon } from "src/assets/networks/polygon_icon.
 import { ReactComponent as HarmonyIcon } from "src/assets/networks/harmony_icon.svg";
 import { ReactComponent as ArbitrumIcon } from "src/assets/networks/arbitrum_icon.svg";
 import { dark as darkTheme } from "src/themes/dark.js";
-import { river as riverTheme } from "src/themes/river.js";
 import { DebugHelper } from "./helpers/DebugHelper";
 
 export type NetworkId = number;

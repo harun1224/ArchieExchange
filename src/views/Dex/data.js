@@ -1,25 +1,4 @@
-// import {ReactComponent as FantomIcon} from "src/assets/networks/fantom_icon.svg";
-// import {ReactComponent as EthereumIcon} from "src/assets/networks/ethereum_icon.svg";
-// import {ReactComponent as BscIcon} from "src/assets/networks/bsc_icon.svg";
-// import {ReactComponent as AvalancheIcon} from "src/assets/networks/avalanche_icon.svg";
-// import {ReactComponent as PolygonIcon} from "src/assets/networks/polygon_icon.svg";
-// import {ReactComponent as HarmonyIcon} from "src/assets/networks/harmony_icon.svg";
-// import {ReactComponent as ArbitrumIcon} from "src/assets/networks/arbitrum_icon.svg";
-// import {ReactComponent as OptimismIcon} from "src/assets/networks/optimism_icon.svg";
-// import {ReactComponent as FuseIcon} from "src/assets/networks/fuse_icon.svg";
-// import {ReactComponent as GnosisIcon} from "src/assets/networks/gnosis_icon.svg";
-// import {ReactComponent as BobaIcon} from "src/assets/networks/boba_icon.svg";
-// import {ReactComponent as CronosIcon} from "src/assets/networks/cronos_icon.svg";
-// import {ReactComponent as MoonriverIcon} from "src/assets/networks/moonriver_icon.svg";
-// import {ReactComponent as MoonbeamIcon} from "src/assets/networks/moonbeam_icon.svg";
-// import {ReactComponent as AuroraIcon} from "src/assets/networks/aurora_icon.svg";
-// import {ReactComponent as HecoIcon} from "src/assets/networks/heco_icon.svg";
-// import {ReactComponent as OkcIcon} from "src/assets/networks/okc_icon.svg";
-// import {ReactComponent as EvmosIcon} from 'src/assets/networks/evmos_icon.svg'; 
-// import {ReactComponent as CosmosIcon} from 'src/assets/networks/cosmos_icon.svg';
-// import {ReactComponent as OsmosisIcon} from 'src/assets/networks/osmosis_icon.svg';
-// import {ReactComponent as JunoIcon} from 'src/assets/networks/juno_icon.svg';
-// import MoonbeamIcon from "src/components/moobeamlogo";
+
 import EthereumIcon from '../../assets/network_logo/eth.svg'
 import FantomIcon from '../../assets/network_logo/fantom.png'
 import BscIcon from '../../assets/network_logo/bsc.svg'
@@ -64,6 +43,10 @@ import ThorChainIcon from '../../assets/network_logo/thorchain.svg'
 import LitecoinIcon from '../../assets/network_logo/ltc.svg'
 import BitcoinCashIcon from '../../assets/network_logo/bch.svg'
 import SolanaIcon from '../../assets/network_logo/solana.svg'
+import KccIcon from '../../assets/network_logo/kcc.png'
+import MarsIcon from '../../assets/network_logo/mars.svg'
+import StrideIcon from '../../assets/network_logo/stride.svg'
+import TerraIcon from '../../assets/network_logo/terra.png'
 export const modalType = {
   from: "from",
   to: "to",
@@ -426,35 +409,70 @@ export const swapNetworks = [
     id: 'thorchain',
     logo: ThorChainIcon,
     type: "COSMOS",
-  },  
+  },
+  {
+    blockchain: "TERRA",
+    name: 'Terra',
+    chainId: 'columbus-5',
+    logo: TerraIcon,
+    type: 'COSMOS'
+  },
+  {
+    blockchain: "MARS",
+    name: 'Mars',
+    chainId: 'mars-1',
+    logo: MarsIcon,
+    type: 'COSMOS'
+  },
+  {
+    blockchain: "KCC",
+    name: 'Kcc',
+    chainId: 321,
+    logo: KccIcon,
+    type: 'EVM'
+  },
+  {
+    blockchain: "STRIDE",
+    name: 'Stride',
+    chainId: 'stride-1',
+    logo: StrideIcon,
+    type: 'COSMOS'
+  },
   // {
-  //   blockchain: "BTC",
-  //   name: "Bitcoin",
-  //   chainId: "",
-  //   id: "btc",
-  //   logo: BtcIcon,
-  // }, 
-//   {
-//     blockchain: 'LTC',
-//     name: 'Litecoin',
-//     chainId: '',
-//     id: 'litecoin',
-//     logo: LitecoinIcon
-//   },
-//   {
-//     blockchain: 'BCH',
-//     name: 'Bitcoin Cash',
-//     chainId: '',
-//     id: 'bch',
-//     logo: BitcoinCashIcon
-//   },
-//   {
-//     blockchain: 'SOLANA',
-//     name: 'Solana',
-//     chainId: 'SOLANA',
-//     id: 'solana',
-//     logo: SolanaIcon
-//   }
+  //   blockchain: "SIF",
+  //   name: 'Sifechain',
+  //   chainId: 'sifchain-1',
+  //   logo: StrideIcon,
+  //   type: 'COSMOS'
+  // },
+  {
+    blockchain: "BTC",
+    name: "Bitcoin",
+    chainId: "",
+    id: "btc",
+    logo: BtcIcon,
+  }, 
+  {
+    blockchain: 'LTC',
+    name: 'Litecoin',
+    chainId: '',
+    id: 'litecoin',
+    logo: LitecoinIcon
+  },
+  {
+    blockchain: 'BCH',
+    name: 'Bitcoin Cash',
+    chainId: '',
+    id: 'bch',
+    logo: BitcoinCashIcon
+  },
+  {
+    blockchain: 'SOLANA',
+    name: 'Solana',
+    chainId: 'SOLANA',
+    id: 'solana',
+    logo: SolanaIcon
+  }
 ];
 
 export const slippageList = [

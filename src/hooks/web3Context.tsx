@@ -34,8 +34,8 @@ function isIframe() {
   Types
 */
 type onChainProvider = {
-  connect: (status: String) => void;
-  disconnect: () => void;
+  connect: (wallet: any) => any;
+  disconnect: (wallet: any) => any;
   provider: JsonRpcProvider | null;
   address: string;
   connected: Boolean;
@@ -119,52 +119,52 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({child
   // };
 
   // NOTE (appleseed): none of these listeners are needed for Backend API Providers
-  // ... so I changed these listeners so that they only apply to walletProviders, eliminating
+  // ... so I  these listeners so that they only apply to walletProviders, eliminating
   // ... polling to the backend providers for network changes
-  const _initListeners = useCallback(
-    rawProvider => {
-      if (!rawProvider.on) {
-        return;
-      }
-      rawProvider.on("accountsChanged", async (accounts: string[]) => {
-        setTimeout(() => {
-          if (!isDexPage() || (isDexPage() && !isDexLoading())) {
-            window.location.reload();
-          } else {
-            if (accounts.length > 0 && accounts[0].length > 0) {
-              setAddress(accounts[0]);
-            }
-          }
-        }, 1);
-      });
+  // const _initListeners = useCallback(
+  //   rawProvider => {
+  //     if (!rawProvider.on) {
+  //       return;
+  //     }
+  //     rawProvider.on("accountsChanged", async (accounts: string[]) => {
+  //       setTimeout(() => {
+  //         if (!isDexPage() || (isDexPage() && !isDexLoading())) {
+  //           window.location.reload();
+  //         } else {
+  //           if (accounts.length > 0 && accounts[0].length > 0) {
+  //             setAddress(accounts[0]);
+  //           }
+  //         }
+  //       }, 1);
+  //     });
 
-      rawProvider.on("chainChanged", async (chain: string) => {
-        var chainId;
-        // On mobile chain comes in as a number but on web it comes in as a hex string
-        if (typeof chain === "number") {
-          chainId = chain;
-        } else {
-          chainId = parseInt(chain, 16);
-        }
-        if (!_checkNetwork(chainId)) {
-          disconnect().then();
-        }
-        setTimeout(() => {
-          if (!isDexPage() || (isDexPage() && !isDexLoading())) {
-            window.location.reload();
-          }
-        }, 1);
-      });
+  //     rawProvider.on("chainChanged", async (chain: string) => {
+  //       var chainId;
+  //       // On mobile chain comes in as a number but on web it comes in as a hex string
+  //       if (typeof chain === "number") {
+  //         chainId = chain;
+  //       } else {
+  //         chainId = parseInt(chain, 16);
+  //       }
+  //       if (!_checkNetwork(chainId)) {
+  //         disconnect().then();
+  //       }
+  //       setTimeout(() => {
+  //         if (!isDexPage() || (isDexPage() && !isDexLoading())) {
+  //           window.location.reload();
+  //         }
+  //       }, 1);
+  //     });
 
-      rawProvider.on("network", (_newNetwork: any, oldNetwork: any) => {
-        if (!oldNetwork) {
-          return;
-        }
-        window.location.reload();
-      });
-    },
-    [provider],
-  );
+  //     rawProvider.on("network", (_newNetwork: any, oldNetwork: any) => {
+  //       if (!oldNetwork) {
+  //         return;
+  //       }
+  //       window.location.reload();
+  //     });
+  //   },
+  //   [provider],
+  // );
 
   /**
    * throws an error if networkId is not supported
@@ -263,7 +263,9 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({child
       { name: 'STARNAME', chainId: 'iov-mainnet-ibc', supportedWallet:["keplr", "Cosmostation", "leap"] },
       { name: 'UMEE', chainId: 'umee-1', supportedWallet:["keplr", "Cosmostation", "leap", "Coin98", "Frontier"] },
       { name: 'THOR', chainId: '', supportedWallet:["Coin98"] },
-      
+      { name: 'TERRA', chainId: 'columbus-5', supportedWallet:["keplr", "Coin98"] },
+      { name: 'MARS', chainId: 'mars-1', supportedWallet:["Cosmostation", "leap"] },
+      { name: 'STRIDE', chainId: 'stride-1', supportedWallet:["keplr", "Cosmostation", "leap", "Coin98"] },
     ]
     const supportedChain = cosmosPopularChains.filter(chain =>{
       return chain.supportedWallet.find(wallet => wallet == status)
@@ -288,18 +290,18 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({child
   }
 
   // connect - only runs for WalletProviders
-  const connect = useCallback(async (status) => {
+  const connect = useCallback(async (wallet) => {
     // handling Ledger Live;
+    
     let rawProvider:any;
     let connectedProvider;
     let chainId;
     let connectedAddress;
-
-    if (status == "Metamask") {      
+    let walletconnectionStatus = {evmWalletConnection:false, cosmosWalletconnection: false}
+    if (wallet.name == "Metamask" && !provider) {     
       if (isIframe()) {
         rawProvider = new IFrameEthereumProvider();
       } else {
-        // rawProvider = await web3Modal.connect();
         rawProvider = await detectEthereumProvider({ mustBeMetaMask: true });
         if(rawProvider) {
           //@ts-ignore
@@ -309,24 +311,14 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({child
         chainId = await connectedProvider.getNetwork().then(network => network.chainId);
         connectedAddress = await connectedProvider.getSigner().getAddress();
         setAddress(connectedAddress);
-        // const validNetwork = _checkNetwork(chainId);
-        // if (!validNetwork) {
-        //   const switched = await switchEthereumChain(defaultNetworkId, true);
-        //   if (!switched) {
-        //     web3Modal.clearCachedProvider();
-        //     const errorMessage = "Unable to connect. Please change network using provider.";
-        //     console.error(errorMessage);
-        //     store.dispatch(error(errorMessage));
-        //   }
-        //   return;
-        // }
-        // Save everything after we've validated the right network.
-        // Eventually we'll be fine without doing network validations.
-        setProvider(connectedProvider);        
+        setProvider(connectedProvider);
+        if (connectedProvider) {
+          walletconnectionStatus.evmWalletConnection = true;
+        } 
       }
     }
 
-    if (status == "WallectConect") {
+    if (wallet.name == "WallectConect") {
       rawProvider = new WalletConnectProvider({
         infuraId: "27e484dcd9e3efcfd25a83a78777cdf1", // Required
       });
@@ -335,176 +327,202 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({child
       chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
       connectedAddress = await connectedProvider.getSigner().getAddress();
       setAddress(connectedAddress);
-      // if (isIframe()) {
-      //   rawProvider = new IFrameEthereumProvider();
-      // } else {
-        
-      //   rawProvider = await web3Modal.connect();
-      //   console.log("wall")
-      // }
-  
-      // // new _initListeners implementation matches Web3Modal Docs
-      // // ... see here: https://github.com/Web3Modal/web3modal/blob/2ff929d0e99df5edf6bb9e88cff338ba6d8a3991/example/src/App.tsx#L185
-      // _initListeners(rawProvider);
-      // const connectedProvider = new Web3Provider(rawProvider, "any");
-      // const chainId = await connectedProvider.getNetwork().then(network => network.chainId);
-      // const connectedAddress = await connectedProvider.getSigner().getAddress();
-      // setAddress(connectedAddress);
-      // const validNetwork = _checkNetwork(chainId);
-      // if (!validNetwork) {
-      //   const switched = await switchEthereumChain(defaultNetworkId, true);
-      //   if (!switched) {
-      //     web3Modal.clearCachedProvider();
-      //     const errorMessage = "Unable to connect. Please change network using provider.";
-      //     console.error(errorMessage);
-      //     store.dispatch(error(errorMessage));
-      //   }
-      //   return;
-      // }
     }
 
-    if (status == "Binance") {
+    if (wallet.name == "Binance" && !provider) {
       rawProvider = new ethers.providers.Web3Provider(window.BinanceChain)
       await rawProvider.send('eth_requestAccounts', [])
       connectedProvider = rawProvider;
       chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
       connectedAddress = await connectedProvider.getSigner().getAddress();
       setAddress(connectedAddress);
+      setProvider(connectedProvider);
+      if (connectedProvider) {
+        walletconnectionStatus.evmWalletConnection = true;
+      }
+      console.log("Binance Wallet passed" ) 
     }
 
-    if (status == "TrustWallet") {
-      rawProvider = new ethers.providers.Web3Provider(window.ethereum)
+    if (wallet.name == "TrustWallet" && !provider) {
+      rawProvider = new ethers.providers.Web3Provider(window.trustwallet)
       await rawProvider.send('eth_requestAccounts', [])
       connectedProvider = rawProvider;
       chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
       connectedAddress = await connectedProvider.getSigner().getAddress();
       setAddress(connectedAddress);
+      setProvider(connectedProvider);
+      if (connectedProvider) {
+        walletconnectionStatus.evmWalletConnection = true;
+      }
     }   
 
-    if (status == "Coinbase") {
-      rawProvider = new ethers.providers.Web3Provider(window.ethereum)
+    if (wallet.name == "Coinbase" && !provider) {
+      rawProvider = new ethers.providers.Web3Provider(window.coinbaseWalletExtension)
       await rawProvider.send('eth_requestAccounts', [])
       connectedProvider = rawProvider;
       chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
       connectedAddress = await connectedProvider.getSigner().getAddress();
       setAddress(connectedAddress);
+      setProvider(connectedProvider);
+      if (connectedProvider) {
+        walletconnectionStatus.evmWalletConnection = true;
+      }
 
     } 
 
-    if (status == "Coin98") {
+    if (wallet.name == "Coin98" && !provider) {
       rawProvider = new ethers.providers.Web3Provider(window.coin98.provider)
       await rawProvider.send('eth_requestAccounts', [])
       connectedProvider = rawProvider;
       chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
       connectedAddress = await connectedProvider.getSigner().getAddress();
       setAddress(connectedAddress);
+      setProvider(connectedProvider);
+      if (connectedProvider) {
+        walletconnectionStatus.evmWalletConnection = true;
+      }
     }
     
-    if (status == "Exdous") {
+    if (wallet.name == "Exdous" && !provider) {
       rawProvider = new ethers.providers.Web3Provider(window.ethereum)
       await rawProvider.send('eth_requestAccounts', [])
       connectedProvider = rawProvider;
       chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
       connectedAddress = await connectedProvider.getSigner().getAddress();
       setAddress(connectedAddress);
+      setProvider(connectedProvider);
+      if (connectedProvider) {
+        walletconnectionStatus.evmWalletConnection = true;
+      }
     }
-    if (status == "Frontier") {
+    if (wallet.name == "Frontier" && !provider) {
       rawProvider = new ethers.providers.Web3Provider(window.frontier.ethereum)
       await rawProvider.send('eth_requestAccounts', [])
       connectedProvider = rawProvider;
       chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
       connectedAddress = await connectedProvider.getSigner().getAddress();
       setAddress(connectedAddress);
+      setProvider(connectedProvider);
+      if (connectedProvider) {
+        walletconnectionStatus.evmWalletConnection = true;
+      }
     }  
-    if (status == "Clover") {
+    if (wallet.name == "Clover" && !provider) {
       rawProvider = new ethers.providers.Web3Provider(window.clover)
       await rawProvider.send('eth_requestAccounts', [])
       connectedProvider = rawProvider;
       chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
       connectedAddress = await connectedProvider.getSigner().getAddress();
       setAddress(connectedAddress);
+      setProvider(connectedProvider);
+      if (connectedProvider) {
+        walletconnectionStatus.evmWalletConnection = true;
+      }
     }
-    if (status == 'XDefi') {
-      rawProvider = new ethers.providers.Web3Provider(window.ethereum)
+    if (wallet.name == 'XDefi' && !provider) {
+      rawProvider = new ethers.providers.Web3Provider(window.xfi.ethereum)
       await rawProvider.send('eth_requestAccounts', [])
       connectedProvider = rawProvider;
       chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
       connectedAddress = await connectedProvider.getSigner().getAddress();
       setAddress(connectedAddress);
+      setProvider(connectedProvider);
+      if (connectedProvider) {
+        walletconnectionStatus.evmWalletConnection = true;
+      }
     } 
-    if (status == 'Safepal') {
+    if (wallet.name == 'Safepal' && !provider) {
+      rawProvider = new ethers.providers.Web3Provider(window.safepalProvider)
+      await rawProvider.send('eth_requestAccounts', [])
+      connectedProvider = rawProvider;
+      chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
+      connectedAddress = await connectedProvider.getSigner().getAddress();
+      setAddress(connectedAddress);
+      setProvider(connectedProvider);
+      if (connectedProvider) {
+        walletconnectionStatus.evmWalletConnection = true;
+      }
+    }
+    if (wallet.name == 'Tokenpocket' && !provider) {
       rawProvider = new ethers.providers.Web3Provider(window.ethereum)
       await rawProvider.send('eth_requestAccounts', [])
       connectedProvider = rawProvider;
       chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
       connectedAddress = await connectedProvider.getSigner().getAddress();
       setAddress(connectedAddress);
+      setProvider(connectedProvider);
+      if (connectedProvider) {
+        walletconnectionStatus.evmWalletConnection = true;
+      }
     }
-    if (status == 'Tokenpocket') {
-      rawProvider = new ethers.providers.Web3Provider(window.ethereum)
-      await rawProvider.send('eth_requestAccounts', [])
-      connectedProvider = rawProvider;
-      chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
-      connectedAddress = await connectedProvider.getSigner().getAddress();
-      setAddress(connectedAddress);
-    }
-    if (status == 'Okx') {
+    if (wallet.name == 'Okx' && !provider) {
       rawProvider = new ethers.providers.Web3Provider(window.okexchain)
       await rawProvider.send('eth_requestAccounts', [])
       connectedProvider = rawProvider;
       chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
       connectedAddress = await connectedProvider.getSigner().getAddress();
       setAddress(connectedAddress);
+      setProvider(connectedProvider);
+      if (connectedProvider) {
+        walletconnectionStatus.evmWalletConnection = true;
+      }
     }
-    if (status == 'MathWallet') {
-      rawProvider = new ethers.providers.Web3Provider(window.ethereum)
-      await rawProvider.send('eth_requestAccounts', [])
-      connectedProvider = rawProvider;
-      chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
-      connectedAddress = await connectedProvider.getSigner().getAddress();
-      setAddress(connectedAddress);
-    } 
-    if (status == 'Cosmostation') {
 
-      rawProvider = new ethers.providers.Web3Provider(window.cosmostation.ethereum)
-      await rawProvider.send('eth_requestAccounts', [])
-      connectedProvider = rawProvider;
-      chainId = await connectedProvider.getNetwork().then((network: { chainId: any; }) => network.chainId);
-      connectedAddress = await connectedProvider.getSigner().getAddress();
-      setAddress(connectedAddress);
+    if (wallet.name == 'Cosmostation' && addresses.length == 0) {
       let cosmosaddresses:any ;
-      cosmosaddresses = getUserWallet(status);
+      cosmosaddresses = getUserWallet(wallet.name);
       setAddresses(cosmosaddresses);
-      setWalletstatus(status);
+      setWalletstatus(wallet.name);
+      if (addresses) {
+        walletconnectionStatus.cosmosWalletconnection = true;
+      }
+
+      console.log("Cosmostation passed")
+      
     }
-    if (status == 'keplr') {
+    
+    if (wallet.name == 'keplr' && addresses.length == 0) {
       let cosmosaddresses :any;
-      cosmosaddresses = getUserWallet(status);
+      cosmosaddresses = getUserWallet(wallet.name);
       
       setAddresses(cosmosaddresses);
-      setWalletstatus(status);
+      setWalletstatus(wallet.name);
+      if (addresses) {
+        walletconnectionStatus.cosmosWalletconnection = true;
+      }
     }
-    if (status == 'leap') {
+
+    if (wallet.name == 'leap' && addresses.length == 0) {
       let cosmosaddresses:any ;
-      cosmosaddresses = getUserWallet(status);
+      cosmosaddresses = getUserWallet(wallet.name);
       console.log("keplr", cosmosaddresses)
       setAddresses(cosmosaddresses);
-      setWalletstatus(status);
+      setWalletstatus(wallet.name);
+      if (addresses) {
+        walletconnectionStatus.cosmosWalletconnection = true;
+      }
     }
-    // Keep this at the bottom of the method, to ensure any repaints have the data we need
+
     setConnected(true);
-    return connectedProvider;    
+    return walletconnectionStatus;    
   }, [provider, connected,address, addresses, walletstatus]);//add web3 modeal
 
-  const disconnect = useCallback(async () => {
-    console.log("disconnecting");
-    // web3Modal.clearCachedProvider();
-    setConnected(false);
+  const disconnect = useCallback(async (wallet) => {
 
-    setTimeout(() => {
-      window.location.reload();
-    }, 1);
-  }, [provider, connected]);//add web3 modeal
+    setConnected(false);
+    if (wallet.evmSupport.length > 0) {
+      setAddress("");
+      setProvider(null);
+    }
+    if (wallet.cosmosSupport.length > 0) {
+      setAddresses([]);
+      setWalletstatus("");
+    }
+    return true;
+    // setTimeout(() => {
+    //   window.location.reload();
+    // }, 1);
+  }, [provider, addresses, walletstatus, connected]);//add web3 modeal
 
   const onChainProvider = useMemo(
     () => ({
