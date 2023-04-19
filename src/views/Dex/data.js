@@ -71,7 +71,7 @@ export const swapNetworks = [
   },
   {
     blockchain: 'ARBITRUM',
-    name: 'ARBITRUM',
+    name: 'Arbitrum',
     chainId: 42161,
     id: 'arbitrum',
     logo: ArbitrumIcon,
@@ -79,7 +79,7 @@ export const swapNetworks = [
   },
   {
     blockchain: 'AURORA',
-    name: 'AURORA',
+    name: 'Aurora',
     chainId: 1313161554,
     id: 'aurora',
     logo: AuroraIcon,
@@ -88,7 +88,7 @@ export const swapNetworks = [
   },
   {
     blockchain: 'AVAX_CCHAIN',
-    name: 'AVALANCHE',
+    name: 'Avalanche',
     chainId: 43114,
     id: 'avax_cchain',
     logo: AvalancheIcon,
@@ -113,7 +113,7 @@ export const swapNetworks = [
   },
   {
     blockchain: 'BOBA',
-    name: 'BOBA',
+    name: 'Boba',
     chainId: 288,
     id: 'boba',
     logo: BobaIcon,
@@ -148,7 +148,7 @@ export const swapNetworks = [
   },
   {
     blockchain: 'COMDEX',
-    name: 'COMDEX',
+    name: 'Comdex',
     chainId:'comdex-1',
     id: 'comdex',
     logo: ComdexIcon,
@@ -156,7 +156,7 @@ export const swapNetworks = [
   },
   {
     blockchain: 'COSMOS',
-    name: 'COSMOS',
+    name: 'Cosmos',
     chainId: 'cosmoshub-4',
     id: 'cosmos',
     logo: CosmosIcon,
@@ -173,7 +173,7 @@ export const swapNetworks = [
   },
   {
     blockchain: 'CRONOS',
-    name: 'CRONOS',
+    name: 'Cronos',
     chainId: 25,
     id: 'cronos',
     logo: CronosIcon,
@@ -208,7 +208,7 @@ export const swapNetworks = [
   },
   {
     blockchain: 'EVMOS',
-    name: 'EVMOS',
+    name: 'Evmos',
     chainId: 9001,
     id: 'evmos',
     logo: EvmosIcon,
@@ -217,7 +217,7 @@ export const swapNetworks = [
   },  
   {
     blockchain: 'FANTOM',
-    name: 'FANTOM',
+    name: 'Fantom',
     chainId: 250,
     id: 'fantom',
     logo: FantomIcon,
@@ -226,7 +226,7 @@ export const swapNetworks = [
   },
   {
     blockchain: 'FUSE',
-    name: 'FUSE',
+    name: 'Fuse',
     chainId: 122,
     id: 'fuse',
     logo: FuseIcon,
@@ -235,7 +235,7 @@ export const swapNetworks = [
   },
   {
     blockchain: 'GNOSIS',
-    name: 'GNOSIS',
+    name: 'Gnosis',
     chainId: 100,
     id: 'gnosis',
     logo: GnosisIcon,
@@ -244,7 +244,7 @@ export const swapNetworks = [
   },
   {
     blockchain: 'HARMONY',
-    name: 'HARMONY',
+    name: 'Hamony',
     chainId: 1666600000,
     id: 'harmony',
     logo: HarmonyIcon,
@@ -253,7 +253,7 @@ export const swapNetworks = [
   },
   {
     blockchain: 'HECO',
-    name: 'HECO',
+    name: 'Heco',
     chainId: 128,
     id: 'heco',
     logo: HecoIcon,
@@ -262,7 +262,7 @@ export const swapNetworks = [
   },
   {
     blockchain: "IRIS",
-    name: "IRISnet",
+    name: "Irisnet",
     chainId: "irishub-1",
     id: "irisnet",
     logo: IrisnetIcon,
@@ -271,7 +271,7 @@ export const swapNetworks = [
   },
   {
     blockchain: 'JUNO',
-    name: 'JUNO',
+    name: 'Juno',
     chainId: 'juno-1',
     id: 'juno',
     logo: JunoIcon,
@@ -279,7 +279,7 @@ export const swapNetworks = [
   },
   {
     blockchain: 'KI',
-    name: 'KI',
+    name: 'Ki',
     chainId: 'Kichain-2',
     id: 'ki',
     logo: KiIcon,
@@ -287,7 +287,7 @@ export const swapNetworks = [
   },
   {
     blockchain: 'KUJIRA',
-    name: 'KUJIRA',
+    name: 'Kujira',
     chainId: 'kaiyo-1',
     id: 'kujira',
     logo: KujiraIcon,
@@ -303,7 +303,7 @@ export const swapNetworks = [
   },
   {
     blockchain: 'MOONBEAM',
-    name: 'MOONBEAM',
+    name: 'Moonbeam',
     chainId: 1284,
     id: 'moonbeam',
     logo: MoonbeamIcon,
@@ -312,7 +312,7 @@ export const swapNetworks = [
   },
   {
     blockchain: 'MOONRIVER',
-    name: 'MOONRIVER',
+    name: 'Moonriver',
     chainId: 1285,
     id: 'moonriver',
     logo: MoonriverIcon,
@@ -330,7 +330,7 @@ export const swapNetworks = [
   },
   {
     blockchain: 'OPTIMISM',
-    name: 'OPTIMISM',
+    name: 'Optimism',
     chainId: 10,
     id: 'optimism',
     logo: OptimismIcon,
@@ -339,7 +339,7 @@ export const swapNetworks = [
   },
   {
     blockchain: 'OSMOSIS',
-    name: 'OSMOSIS',
+    name: 'Osmosis',
     chainId: 'osmosis-1',
     id: 'osmosis',
     logo: OsmosisIcon,
@@ -347,7 +347,7 @@ export const swapNetworks = [
   },
   {
     blockchain: 'PERSISTENCE',
-    name: 'PERSISTENCE',
+    name: 'Persistence',
     chainId: 'core-1',
     id: 'persistence',
     logo: PersistenceIcon,
@@ -355,7 +355,7 @@ export const swapNetworks = [
   },
   {
     blockchain: 'POLYGON',
-    name: 'POLYGON',
+    name: 'Polygon',
     chainId: 137,
     id: 'polygon',
     logo: PolygonIcon,
@@ -438,13 +438,6 @@ export const swapNetworks = [
     logo: StrideIcon,
     type: 'COSMOS'
   },
-  // {
-  //   blockchain: "SIF",
-  //   name: 'Sifechain',
-  //   chainId: 'sifchain-1',
-  //   logo: StrideIcon,
-  //   type: 'COSMOS'
-  // },
   {
     blockchain: "BTC",
     name: "Bitcoin",

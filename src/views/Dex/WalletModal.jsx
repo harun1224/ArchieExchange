@@ -6,121 +6,112 @@ import detectEthereumProvider from '@metamask/detect-provider'
 import { wallets } from "./walletsinfo";
 import "./dex.scss";
 import { useWeb3Context } from "../../hooks";
-
-let walletInfo = JSON.parse(JSON.stringify(wallets));
+import { useDispatch, useSelector } from "react-redux";
+import { walletConnected, walletDisconnected } from "src/slices/WalletstatusSlice";
+const walletInfo = JSON.parse(JSON.stringify(wallets));
 function WalletModal(props) {
-
-  const { connect, disconnect} = useWeb3Context();
-  const [walletData, setWalletData] = useState([]);
-
   
+  const { connect, disconnect} = useWeb3Context();
+  const dispatch = useDispatch();
+  const walletStatus = useSelector(state => state.walletStatus.walletStatus);
   
   const checkWalletinstalled = async () => {
     console.log("checkWalletinstalled")
     const rawProvider = await detectEthereumProvider({ mustBeMetaMask: true });
     if(rawProvider) {
-      walletInfo[0].status = "disconnected";
+      dispatch(walletDisconnected(0))
     }
 
     if (typeof window.ethereum !== 'undefined') {
       if (window.ethereum.providers) {
         window.ethereum.providers.forEach(async (p) => {
           if (p.isExodus) {
-            walletInfo[6].status = 'disconnected';
+            dispatch(walletDisconnected(6))
           }
 
           if (p.isTokenPocket) {
-            walletInfo[11].status = 'disconnected';
+            dispatch(walletDisconnected(11))
           }
         });
       } else {
         if (window.ethereum.isExodus) {
-          walletInfo[6].status = 'disconnected';
+          dispatch(walletDisconnected(6))
         } 
         if (window.ethereum.isTokenPocket) {
-          walletInfo[11].status = 'disconnected'
+          dispatch(walletDisconnected(11))
         }
 
       } 
     }
 
     if ( typeof window.BinanceChain !== 'undefined') {
-      walletInfo[2].status = 'disconnected';
+      dispatch(walletDisconnected(2))
     }
 
     if (typeof window.trustwallet !== 'undefined') {
-      walletInfo[3].status = 'disconnected';
+      dispatch(walletDisconnected(3))
     }
 
     if (typeof window.coin98 !== 'undefined') {
-      walletInfo[4].status = 'disconnected'
+      dispatch(walletDisconnected(4))
     }
 
     if (typeof window.CoinbaseWalletProvider !== 'undefined') {
-      walletInfo[5].status = 'disconnected';
+      dispatch(walletDisconnected(5))
     }
 
     if ( window.frontier !== 'undefined') {
-      walletInfo[7].status = "disconnected";
+      dispatch(walletDisconnected(7))
     }
 
     if (typeof window.clover !== 'undefined') {
-      walletInfo[8].status = 'disconnected';
+      dispatch(walletDisconnected(8))
     }
 
     if (typeof window.xfi !== 'undefined') {
-      walletInfo[9].status = 'disconnected';
+      dispatch(walletDisconnected(9))
     }
 
     if (typeof window.safepalProvider !== 'undefined') {
-      walletInfo[10].status = 'disconnected';
+      dispatch(walletDisconnected(10))
     }
 
     if (typeof window.okexchain !== 'undefined') {
-      walletInfo[12].status = 'disconnected';
+      dispatch(walletDisconnected(12))
     }
 
     if (typeof window.cosmostation !== 'undefined') {
-      walletInfo[13].status = 'disconnected';
+      dispatch(walletDisconnected(13))
     }
 
     if (typeof window.keplr !== 'undefined') {
-      walletInfo[14].status = 'disconnected';
+      dispatch(walletDisconnected(14))
     }
 
     if (typeof window.leap !== 'undefined') {
-      walletInfo[15].status = 'disconnected';
+      dispatch(walletDisconnected(15))
     }
-
-    setWalletData(walletInfo);
   }
 
   const walletConnect = async (wallet) => {
-
+    console.log("adasdf", wallet)
     if (wallet.status == "disconnected") {
       const walletconnetionStatus = await connect(wallet);
-      console.log("walletStatus", walletconnetionStatus)
-      if (walletconnetionStatus.evmWalletConnection == true || walletconnetionStatus.cosmosWalletconnection == true) {
-        walletInfo[wallet.id].status = "connected"
-        setWalletData(walletInfo);
-        console.log('wallet connected');
-      } else {
-        alert(`You have already conneted other wallet`)
-      } 
-    } else if (wallet.status == "install") {
+      if (walletconnetionStatus) {
+        dispatch(walletConnected(wallet.id))
+      }
+    } 
+    else if (wallet.status == "install") {
       alert(`You do not have ${wallet.name}, Please install`);
     } else {
-      console.log("arrived to disconnect", walletInfo[wallet.id].name)
+      console.log("arrived disconnect function on WalletModal")
         const walletconnetionStatus = await disconnect(wallet);
+        console.log("return value after calling  disconnect function on WalletModal", walletconnetionStatus)
         if (walletconnetionStatus) {
-            walletInfo[wallet.id].status = "disconnected" 
-            setWalletData(walletInfo)
-            console.log("wallet status is disconnected")        
-        }
+            dispatch(walletDisconnected(wallet.id))       
+      }
     }
-  }
-
-
+  }  
 
   useEffect(() => {
     checkWalletinstalled();
@@ -147,12 +138,12 @@ function WalletModal(props) {
                     </div>
                     <div className=" overflow-x-hidden">
                       <ul className="relative grid gap-2 px-2 py-4 grid-cols-2 sm:grid-cols-4 list-none">
-                        {walletData.map((wallet) =>{
+                        {walletStatus.map((wallet) =>{
                           return(                           
                               <li className=" cursor-pointer relative mx-auto flex w-auto flex-col py-2 px-1" onClick={() => walletConnect(wallet)}>
                                 <img src={wallet.logo} className="mx-auto mb-2 h-10 rounded-full md:h-15"/>
                                 <Typography className="text-center font-bold">{wallet.name}</Typography>
-                                <p className="text-[#ffffffb3] text-center">{wallet.status}</p>
+                                  <p className="text-[#ffffffb3] text-center">{wallet.status}</p>
                               </li>
                             )
                         })}

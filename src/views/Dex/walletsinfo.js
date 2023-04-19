@@ -29,7 +29,7 @@ export const wallets = [
     {
         logo:walletconnect,
         name:"WallectConect",
-        status:"disconnect",
+        status:"disconnected",
         id: 1,
         evmSupport:["ETH", "BSC", "POLYGON"],
         cosmosSupport:[],
@@ -151,7 +151,7 @@ export const wallets = [
         name:"Cosmostation",
         status:"install",
         id: 13,
-        evmSupport:[],
+        evmSupport:["ETH"],
         cosmosSupport:["cosmos"],
         solanaSupport:[],
         utxoSupport: [],
